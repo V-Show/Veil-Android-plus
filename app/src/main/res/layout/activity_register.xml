@@ -60,7 +60,7 @@
                     android:layout_width="@dimen/size_gender_width"
                     android:layout_height="@dimen/size_gender_height"
                     android:layout_marginRight="@dimen/gender_margin"
-                    android:background="@drawable/register_gender_men_selector"
+                    android:background="@drawable/common_text_selector"
                     android:button="@null"
                     android:checked="true" />
 
@@ -68,7 +68,7 @@
                     android:id="@+id/activity_register_gender_women"
                     android:layout_width="@dimen/size_gender_width"
                     android:layout_height="@dimen/size_gender_height"
-                    android:background="@drawable/register_gender_women_selector"
+
                     android:button="@null" />
             </RadioGroup>
 

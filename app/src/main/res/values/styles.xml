@@ -13,7 +13,7 @@
     <style name="Style_Dialog_Button">
         <item name="android:textSize">10.0sp</item>
         <item name="android:textColor">#ffffffff</item>
-        <item name="android:background">@drawable/btn_default</item>
+        <item name="android:background">@drawable/btn_bg_default</item>
         <item name="android:layout_marginLeft">5.0dip</item>
         <item name="android:layout_marginRight">5.0dip</item>
         <item name="android:gravity">left</item>

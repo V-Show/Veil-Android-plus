@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="59dp"
+    android:background="@color/white"
+    >
+
+    <ImageView
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@mipmap/logo_big"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/activity_access_base_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="48dp"
+        android:paddingRight="48dp"
+        android:layout_marginTop="22dp"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/activity_access_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/activity_access_sign_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/gender_margin"
+                android:background="@color/transparent"
+                android:textColor="@drawable/common_text_selector"
+                android:text="Sign In"
+                android:textSize="17sp"
+                android:button="@null"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/activity_access_sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@drawable/common_text_selector"
+                android:background="@color/transparent"
+                android:text="Sign Up"
+                android:textSize="17sp"
+                android:button="@null" />
+        </RadioGroup>
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:hint="user name"
+                android:background="@null"
+                android:textColor="@color/common_btn_text_color"
+                android:textColorHint="@color/text_unchecked_color"
+         />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_unchecked_color"
+         />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp"
+                android:background="@null"
+                android:hint="password"
+                android:textColor="@color/common_btn_text_color"
+                android:textColorHint="@color/text_unchecked_color"
+                />
+           <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_unchecked_color"
+            />
+
+
+            <EditText
+                android:id="@+id/activity_access_repeat_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp"
+                android:hint="repeat password"
+                android:background="@null"
+                android:visibility="gone"
+                android:textColor="@color/common_btn_text_color"
+                android:textColorHint="@color/text_unchecked_color"
+                />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_unchecked_color"
+            />
+        
+        <Button
+            android:id="@+id/activity_access_btn_confirm"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/common_btn_bg_selector"
+            android:text="@string/confirm"
+            android:textSize="23sp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/common_btn_text_color"
+            />
+
+        <com.veiljoy.veil.android.view.CommonLoadBar
+            android:id="@+id/activity_access_load"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
