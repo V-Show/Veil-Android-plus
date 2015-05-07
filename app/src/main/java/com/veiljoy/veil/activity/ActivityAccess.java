@@ -25,11 +25,11 @@ public class ActivityAccess extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_access);
+        setContentView(R.layout.include_impression);
 
-        initViews();
-        initEvents();
-        init();
+//        initViews();
+//        initEvents();
+//        init();
 
     }
 

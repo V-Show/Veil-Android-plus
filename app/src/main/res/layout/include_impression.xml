@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:background="@color/common_bg_color"
+    >
+
+
+
+
+
+<com.veiljoy.veil.android.view.FlowLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    >
+
+    <TextView
+        style="@style/text_flag_01"
+        android:background="@drawable/flag_blue"
+        android:textColor="#fff66393"
+        android:text="狐狸精" />
+
+    <TextView
+        style="@style/text_flag_01"
+        android:text="要多烂漫有多烂漫" />
+
+    <TextView
+        style="@style/text_flag_01"
+        android:text="床上小旋风" />
+
+    <TextView
+        style="@style/text_flag_01"
+        android:text="呵呵" />
+
+    <TextView
+        style="@style/text_flag_01"
+        android:text="如家粉丝" />
+
+    <TextView
+        style="@style/text_flag_01"
+        android:text="假装努力赚钱" />
+
+    <TextView
+        style="@style/text_flag_01"
+        android:text="撸过" />
+
+    </com.veiljoy.veil.android.view.FlowLayout>
+
+
+
+        />
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:layout_marginTop="200dp"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Make a new impression"
+        android:textSize="14sp"
+        />
+
+    <ImageButton
+        android:layout_alignParentRight="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/change_impression_selector"
+        />
+
+    </RelativeLayout>
+
+
+    <com.veiljoy.veil.android.view.FlowLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        >
+
+        <TextView
+            style="@style/text_flag_01"
+            android:background="@drawable/flag_blue"
+            android:textColor="#fff66393"
+            android:text="技术好" />
+
+        <TextView
+            style="@style/text_flag_01"
+            android:text="会转" />
+
+        <TextView
+            style="@style/text_flag_01"
+            android:text="头发香" />
+
+        <TextView
+            style="@style/text_flag_01"
+            android:text="可以做闺蜜" />
+
+        <TextView
+            style="@style/text_flag_01"
+            android:text="爱如潮水" />
+
+        <TextView
+            style="@style/text_flag_01"
+            android:text="恨那时年少" />
+
+        <TextView
+            style="@style/text_flag_01"
+            android:text="抱着舒服" />
+
+    </com.veiljoy.veil.android.view.FlowLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        >
+
+      <EditText
+        android:id="@+id/include_impression_et_make_new"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:textColor="@color/common_btn_text_color"
+        android:textColorHint="@color/text_unchecked_color"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        />
+
+       <View
+        android:id="@+id/include_et_line"
+        android:layout_width="200dp"
+        android:layout_height="2px"
+        android:background="@color/text_unchecked_color"
+        android:layout_below="@id/include_impression_et_make_new"
+        />
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_alignBottom="@id/include_et_line"
+            android:layout_alignParentRight="true"
+            android:text="make"
+            android:gravity="center"
+            android:textColor="@color/text_checked_color"
+            android:background="@drawable/make_impression_selector"
+        />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

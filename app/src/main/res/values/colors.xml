@@ -30,4 +30,5 @@
     <color name="text_unchecked_color">#ffd8dce1</color>
     <color name="text_checked_color">#ff1ebaff</color>
     <color name="common_btn_text_color">#ff7d8a9c</color>
+    <color name="common_bg_color">#fffcfcfc</color>
 </resources>
