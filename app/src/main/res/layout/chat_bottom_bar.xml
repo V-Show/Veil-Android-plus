@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:background="@color/gray"
+        android:visibility="gone"
+        >
+        <ScrollView
+            android:id="@+id/previewScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadingEdgeLength="0dip"
+            android:fillViewport="true"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+
+                <include layout="@layout/user_info_bottom_bar"
+                    android:id="@+id/chat_bottom_bar_user_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                />
+
+                <include layout="@layout/include_impression"
+                    android:id="@+id/chat_bottom_bar_impression"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+     </LinearLayout>
+
+
+</RelativeLayout>
+
+

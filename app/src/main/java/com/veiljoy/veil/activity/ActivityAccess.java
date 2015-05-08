@@ -25,7 +25,7 @@ public class ActivityAccess extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.include_impression);
+        setContentView(R.layout.chat_bottom_bar);
 
 //        initViews();
 //        initEvents();

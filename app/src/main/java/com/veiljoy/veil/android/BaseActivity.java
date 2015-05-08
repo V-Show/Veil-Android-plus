@@ -3,6 +3,7 @@ package com.veiljoy.veil.android;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,7 +17,24 @@ import com.veiljoy.veil.R;
  * Created by zhongqihong on 15/3/31.
  */
 public class BaseActivity extends Activity implements IActivitySupport{
+    /**
+     * 屏幕的宽度、高度、密度
+     */
+    protected int mScreenWidth;
+    protected int mScreenHeight;
+    protected float mDensity;
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        mScreenWidth = metric.widthPixels;
+        mScreenHeight = metric.heightPixels;
+        mDensity = metric.density;
+    }
 
     /**
      * 含有Bundle通过Class跳转界面 *
@@ -82,4 +100,14 @@ public class BaseActivity extends Activity implements IActivitySupport{
         super.onDestroy();
         //((BaseApplication)this.getApplication()).exit();
     }
+    //宽
+//    public int getViewWidth(LinearLayout view){
+//        view.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+//        return view.getMeasuredWidth();
+//    }
+//    //高
+//    public int getViewHeight(LinearLayout view){
+//        view.measure(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+//        return view.getMeasuredHeight();
+//    }
 }
