@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical" >
+
+
+
+
+            <ViewFlipper
+                android:id="@+id/activity_guide_vf_viewflipper"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:flipInterval="1000"
+                android:persistentDrawingCache="animation" >
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/include_guide_baseinfo" />
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/include_guide_character" />
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/include_guide_voice" />
+
+
+
+            </ViewFlipper>
+
+
+</RelativeLayout>

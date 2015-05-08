@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.veiljoy.veil.activity.ActivityRoom"
+            android:name="com.veiljoy.veil.activity.ActivitySetting"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -33,9 +33,18 @@
         <activity android:name=".activity.ActivityHome"
             android:windowSoftInputMode="adjustPan"
             />
+        <activity android:name=".activity.ActivityGuide"
+            android:windowSoftInputMode="adjustPan"
+            />
+
+        <activity android:name=".activity.ActivityRoom"
+            android:windowSoftInputMode="adjustPan"
+        />
         <activity android:name=".activity.ActivityAccess"
             android:windowSoftInputMode="adjustPan"
             />
+
+
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
