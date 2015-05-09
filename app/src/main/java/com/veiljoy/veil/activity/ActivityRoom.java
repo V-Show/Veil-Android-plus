@@ -1,5 +1,6 @@
 package com.veiljoy.veil.activity;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -7,8 +8,10 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -21,6 +24,7 @@ import com.veiljoy.veil.android.BaseActivity;
 public class ActivityRoom extends BaseActivity implements View.OnClickListener {
 
 
+
     final String TAG = "ActivityRoom";
     ScrollView previewScroll;
     private boolean drawScroll = true;
@@ -31,46 +35,26 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     FrameLayout mUserInfoLayout;
     ScrollView mScrollView;
     LinearLayout mImpression;
+    ImageButton mMenu;
+    int transHeight=0;
+    State mState=State.TOP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
-
-
         initViews();
         initEvents();
-//       init();
+
 
     }
 
+
+
     private void initViews() {
 
-//        previewScroll = (ScrollView)findViewById( R.id.previewScroll );
-//        final int apiLevel = Build.VERSION.SDK_INT;
-//        if( apiLevel >= 9 )
-//        { // 2.3
-//            previewScroll.setOverScrollMode( View.OVER_SCROLL_NEVER );
-//        }
 //
-        mTalkBarAnim = AnimationUtils.loadAnimation(this, R.anim.talk_bar_popup);
-        mTalkBarAnim.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        mMenu=(ImageButton)this.findViewById(R.id.activity_room__ib_menu);
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                mImpression.invalidate();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        mTalkBarAnim.setFillAfter(true);
-      //  mScrollView=(ScrollView)this.findViewById(R.id.activity_room_scrollview);
         mBtnTalk = (Button) this.findViewById(R.id.activity_room_btn_talk);
         mTalkLayout = (LinearLayout) this.findViewById(R.id.activity_room_talk_layout);
         mTalkBar = (LinearLayout) this.findViewById(R.id.activity_chat_talk);
@@ -90,34 +74,29 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
 
                 int height= mTalkBar.getMeasuredHeight();
 
-                Log.d(TAG, "layoutHeight=" + layoutHeight
+                transHeight=layoutHeight - height;
 
-                                + "height=" + height
 
-                                + "layoutHeight - height= " + (layoutHeight - height)
-                        +"  +mDensity="+  +mDensity
-                );
-//layoutHeight - height
-                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mTalkLayout.getLayoutParams();
-                params.setMargins(0, layoutHeight - height-100, 0, 0);
+                if(mState==State.BOTTOM){
+                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",0).setDuration(2000).start();
+                    mState=State.TOP;
+                }
+                else if(mState==State.TOP){
+                    mState=State.BOTTOM;
+                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",transHeight).setDuration(0).start();
+                }
 
-                mTalkLayout.setLayoutParams(params);
+                Log.v(TAG,"XXXXX111 "+mTalkLayout.getX());
                }
         }
     );
-//
-//        mScrollView.setOnTouchListener(new View.OnTouchListener(){
-//            @Override
-//            public boolean onTouch(View arg0, MotionEvent arg1) {
-//                return false;
-//            }
-//        });
 
 
     }
 
 
     private void initEvents() {
+        mMenu.setOnClickListener(this);
         mBtnTalk.setOnClickListener(this);
     }
 
@@ -177,9 +156,27 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.activity_room_btn_talk:
-                mImpression.setVisibility(View.VISIBLE);
-                mTalkLayout.startAnimation(mTalkBarAnim);
+            case R.id.activity_room__ib_menu:
+
+                if(mState==State.BOTTOM){
+                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",0).setDuration(2000).start();
+                    mState=State.TOP;
+                }
+                else if(mState==State.TOP){
+                    mState=State.BOTTOM;
+                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",transHeight).setDuration(2000).start();
+                }
+
+                Log.v(TAG,"XXXXX "+mTalkLayout.getX());
+
+
                 break;
+
         }
+    }
+
+    enum State{
+        TOP,
+        BOTTOM
     }
 }
