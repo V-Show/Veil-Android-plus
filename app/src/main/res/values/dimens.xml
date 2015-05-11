@@ -27,7 +27,7 @@
     <dimen name="button_height">35dp</dimen>
 
     <!-- 整块功能栏的高度 -->
-    <dimen name="topbar_height">155dp</dimen>
+    <dimen name="topbar_height">47dp</dimen>
 
     <!-- 好友栏 昵称字体 -->
     <dimen name="text_size_friend">14sp</dimen>
@@ -46,6 +46,6 @@
     <dimen name="gridview_avatar_margin_right">30dp</dimen>
     <dimen name="gridview_avatar_margin_left">30dp</dimen>
 
-
+    <dimen name="chat_room_user_option_padding_top">100dp</dimen>
 
 </resources>

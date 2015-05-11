@@ -6,7 +6,9 @@
     android:orientation="vertical"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
+    android:paddingTop="60dp"
     android:background="@color/common_bg_color">
+
 
 
     <com.veiljoy.veil.android.view.InnerScrollView
@@ -17,6 +19,7 @@
         android:fillViewport="true">
 
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -24,7 +27,13 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:background="@color/common_bg_color">
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Peter's impression "
+                android:textSize="14sp"
+                android:layout_marginBottom="20dp"
+                />
             <com.veiljoy.veil.android.view.FlowLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +79,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_marginTop="200dp">
+                android:layout_marginTop="200dp"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -53,6 +53,7 @@
         </RadioGroup>
 
         <EditText
+                android:id="@+id/activity_access_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp"
@@ -60,7 +61,9 @@
                 android:background="@null"
                 android:textColor="@color/common_btn_text_color"
                 android:textColorHint="@color/text_unchecked_color"
-         />
+                android:inputType="text"
+                android:singleLine="true"
+            />
         <View
             android:layout_width="match_parent"
             android:layout_height="2px"
@@ -68,6 +71,7 @@
          />
 
             <EditText
+                android:id="@+id/activity_access_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="45dp"
@@ -75,6 +79,9 @@
                 android:hint="password"
                 android:textColor="@color/common_btn_text_color"
                 android:textColorHint="@color/text_unchecked_color"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:singleLine="true"
                 />
            <View
             android:layout_width="match_parent"
@@ -93,6 +100,9 @@
                 android:visibility="gone"
                 android:textColor="@color/common_btn_text_color"
                 android:textColorHint="@color/text_unchecked_color"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:singleLine="true"
                 />
 
         <View
