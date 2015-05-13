@@ -33,18 +33,18 @@
         <activity android:name=".activity.ActivityHome"
             android:windowSoftInputMode="adjustPan"
             />
-        <activity android:name=".activity.ActivityAccess"
+        <activity android:name=".activity.ActivityUserInfo"
             android:windowSoftInputMode="adjustPan"
             />
 
         <activity android:name=".activity.ActivitySetting"
             android:windowSoftInputMode="adjustPan"
         />
-        <activity android:name=".activity.ActivityGuide"
+
+
+        <activity android:name=".activity.ActivityAccess"
             android:windowSoftInputMode="adjustPan"
             />
-
-
     </application>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />

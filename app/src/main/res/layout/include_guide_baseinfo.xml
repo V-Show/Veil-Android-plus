@@ -3,52 +3,60 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:paddingRight="20dp"
-    android:paddingLeft="20dp"
+    android:paddingRight="80dp"
+    android:paddingLeft="80dp"
+
     >
 
 
     <RadioGroup
-        android:id="@+id/activity_register_radiogroup_gender"
+        android:id="@+id/reg_baseinfo_rg_gender"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
+
         <RadioButton
-            android:id="@+id/activity_register_gender_men"
+            android:id="@+id/reg_baseinfo_rb_male"
             android:layout_width="@dimen/size_gender_width"
             android:layout_height="@dimen/size_gender_height"
             android:layout_marginRight="@dimen/gender_margin"
-            android:background="@drawable/change_impression_selector"
+            android:background="@drawable/register_gender_male_selector"
             android:button="@null"
             android:checked="true" />
 
         <RadioButton
-            android:id="@+id/activity_register_gender_women"
+            android:id="@+id/reg_baseinfo_rb_female"
             android:layout_width="@dimen/size_gender_width"
             android:layout_height="@dimen/size_gender_height"
-            android:background="@drawable/change_impression_selector"
+            android:checked="false"
+            android:background="@drawable/register_gender_female_selector"
             android:button="@null" />
 
     </RadioGroup>
 
 
-        <EditText
+     <EditText
+            android:id="@+id/reg_baseinfo_et_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="50dp"
             android:hint="user name"
+            android:textSize="17sp"
             android:background="@null"
             android:textColor="@color/common_btn_text_color"
             android:textColorHint="@color/text_unchecked_color"
-            />
+            android:inputType="text"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+     />
 
 
-        <View
+     <View
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:background="@color/text_unchecked_color"
-            />
+       />
 
 
 

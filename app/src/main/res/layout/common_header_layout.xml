@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <!-- 功能栏部分 -->
+
+ <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/activity_chat_curr_user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_general_margin_bottom"
+        android:layout_marginLeft="@dimen/activity_general_margin_left"
+        android:layout_marginRight="@dimen/activity_general_margin_right"
+        android:layout_marginTop="@dimen/activity_general_margin_top">
+
+    <!-- 换人按钮 -->
+
+    <ImageButton
+        android:id="@+id/include_app_topbar_ib_change"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentLeft="true"
+        android:background="@mipmap/ic_topbar_back" />
+
+    <!-- 当前用户的头像和昵称 -->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="horizontal">
+
+
+
+        <TextView
+            android:id="@+id/common_header_layout_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxEms="6"
+            android:textSize="@dimen/text_size_me"
+            android:singleLine="true"
+            android:text="Coco Anni"
+            android:textColor="@color/common_btn_text_color" />
+
+        <TextView
+            android:id="@+id/common_header_layout_subtitle"
+            android:layout_marginLeft="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxEms="6"
+            android:textSize="@dimen/text_size_me"
+            android:singleLine="true"
+            android:text="'s Garden"
+            android:textColor="@color/text_unchecked_color" />
+    </LinearLayout>
+
+    <!-- 菜单按钮 -->
+
+    <ImageButton
+        android:id="@+id/activity_room__ib_menu"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/ic_topbar_menu" />
+
+
+</RelativeLayout>

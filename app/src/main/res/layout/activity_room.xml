@@ -10,75 +10,13 @@
     <LinearLayout
         android:id="@+id/activity_chat_user_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="@dimen/topbar_height"
+        android:layout_height="@dimen/topbar_height"
         android:orientation="vertical">
 
-        <!-- 功能栏部分 -->
-
-        <RelativeLayout
-            android:id="@+id/activity_chat_curr_user_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_general_margin_bottom"
-            android:layout_marginLeft="@dimen/activity_general_margin_left"
-            android:layout_marginRight="@dimen/activity_general_margin_right"
-            android:layout_marginTop="@dimen/activity_general_margin_top">
-
-            <!-- 换人按钮 -->
-
-            <ImageButton
-                android:id="@+id/include_app_topbar_ib_change"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
-                android:layout_alignParentLeft="true"
-                android:background="@mipmap/ic_topbar_change" />
-
-            <!-- 当前用户的头像和昵称 -->
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal">
-
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:ellipsize="end"
-                    android:maxEms="6"
-                    android:textSize="@dimen/text_size_me"
-                    android:singleLine="true"
-                    android:text="Coco Anni"
-                    android:textColor="@color/common_btn_text_color" />
-
-                <TextView
-                    android:layout_marginLeft="2dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:ellipsize="end"
-                    android:maxEms="6"
-                    android:textSize="@dimen/text_size_me"
-                    android:singleLine="true"
-                    android:text="'s Garden"
-                    android:textColor="@color/text_unchecked_color" />
-            </LinearLayout>
-
-            <!-- 菜单按钮 -->
-
-            <ImageButton
-                android:id="@+id/activity_room__ib_menu"
-                android:layout_width="@dimen/button_width"
-                android:layout_height="@dimen/button_height"
-                android:layout_alignParentRight="true"
-                android:background="@mipmap/ic_topbar_menu" />
-        </RelativeLayout>
-
+       <include layout="@layout/common_header_layout"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           />
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -140,19 +78,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/text_unchecked_color" />
-            <LinearLayout
 
+            <LinearLayout
+                android:id="@+id/activity_room_talk_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-
+                <!--图片和文字-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
-
                     <LinearLayout
                         android:id="@+id/activity_room_members_layout"
                         android:layout_width="match_parent"
@@ -274,6 +211,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:id="@+id/activity_room_member3_layout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -305,34 +243,32 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="6dp"
                                     android:textSize="17sp"
-                                    android:text="Peter"
+                                    android:text="Me"
                                     android:textColor="#ff3e3a39" />
                             </LinearLayout>
                         </LinearLayout>
-
-
                     </LinearLayout>
-
-
                 </LinearLayout>
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="0dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
 
+                    >
+                    <!--图片和文字-->
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="0dp"
+                        android:paddingBottom="17dp"
                         >
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/activity_room_talk_bar"
                             android:visibility="gone"
+                            android:id="@+id/activity_room_voice_layout"
                             android:orientation="vertical">
 
                             <com.veiljoy.veil.android.view.LinearProgressBarLayout
@@ -365,6 +301,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/activity_room_option_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="40dp"
@@ -378,10 +315,14 @@
                                 android:gravity="left"
                                 >
 
-                                <ImageView
+
+                                <CheckBox
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:background="@mipmap/ic_impression_humorous"
+                                    android:checked="true"
+                                    android:button="@null"
+                                    android:background="@drawable/chat_menu_talk_selector"
+
                                     />
                             </LinearLayout>
                             <LinearLayout
@@ -394,7 +335,7 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:background="@mipmap/ic_impression_humorous"
+                                    android:background="@drawable/chat_menu_change_people_selector"
                                     />
 
 
@@ -409,7 +350,7 @@
                                 <ImageView
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:background="@mipmap/ic_impression_humorous"
+                                    android:background="@drawable/chat_menu_kick_people_selector"
                                     />
 
                             </LinearLayout>
@@ -425,10 +366,27 @@
                 </LinearLayout>
 
                 <View
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@color/text_unchecked_color" />
+
+                <LinearLayout
+                    android:id="@+id/activity_room_detail_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp"
+                    android:paddingBottom="6dp"
+                    android:paddingTop="6dp"
+                    android:gravity="center"
+                    >
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/tip_btn_shape_selector"
+                        />
+                </LinearLayout>
             </LinearLayout>
+
 
 
             <include
@@ -445,7 +403,12 @@
         <!--</ScrollView>-->
     </FrameLayout>
 
-
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_chat_user_info_layout"
+        android:background="@mipmap/bg_topbar_shadow"
+        android:focusable="true" />
 
 
 </RelativeLayout>

@@ -2,8 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DBDBDB"
+    android:background="@color/white"
     android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/activity_chat_user_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/topbar_height"
+        android:orientation="vertical">
+
+        <include layout="@layout/common_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_unchecked_color" />
+
+
+    </LinearLayout>
 
 
 
@@ -240,4 +257,10 @@
 
         </LinearLayout>
     </ScrollView>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_chat_user_info_layout"
+        android:background="@mipmap/bg_topbar_shadow"
+        android:focusable="true" />
 </LinearLayout>

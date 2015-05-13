@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/common_bg_color"
+    android:orientation="vertical" >
+
+
+
+
+
+            <ViewFlipper
+                android:id="@+id/activity_guide_vf_viewflipper"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/activity_userinfo_btn_layout"
+                android:flipInterval="1000"
+                android:persistentDrawingCache="animation" >
+
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/include_guide_baseinfo" />
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/include_guide_character" />
+
+
+                <include
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    layout="@layout/include_guide_voice" />
+
+        </ViewFlipper>
+
+    <LinearLayout
+        android:id="@+id/activity_userinfo_btn_layout"
+        android:background="@drawable/register_bottom_bar_bg"
+        android:layout_width="fill_parent"
+        android:layout_height="76dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        >
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/reg_btn_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="42dip"
+            android:layout_marginRight="9dip"
+            android:text="Previous"
+            android:layout_weight="1"
+            android:background="@drawable/common_btn_bg_selector"
+            android:gravity="center"
+            android:textColor="@color/text_unchecked_color"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/reg_btn_next"
+            android:layout_width="129dp"
+            android:layout_height="33dip"
+            android:background="@drawable/confirm_btn_shape_selector"
+            android:gravity="center"
+            android:textColor="@color/text_checked_color"
+            android:text="Next"
+            android:textSize="14sp" />
+    </LinearLayout>
+</RelativeLayout>

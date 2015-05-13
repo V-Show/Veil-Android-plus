@@ -44,7 +44,7 @@
                     android:id="@+id/activity_chat_iv_girl_avatar"
                     android:layout_width="@dimen/head_width"
                     android:layout_height="@dimen/head_height"
-                    android:background="@mipmap/ic_chat_avatar_0"
+                    android:background="@mipmap/ic_impression_humorous"
                     android:scaleType="fitXY" />
 
                 <TextView

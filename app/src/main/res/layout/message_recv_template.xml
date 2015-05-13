@@ -28,7 +28,7 @@
                 android:layout_width="40dip"
                 android:layout_height="40dip"
                 android:scaleType="fitXY"
-                android:src="@mipmap/ic_chat_avatar_1" />
+                android:src="@mipmap/ic_impression_humorous" />
         </LinearLayout>
 
         <RelativeLayout

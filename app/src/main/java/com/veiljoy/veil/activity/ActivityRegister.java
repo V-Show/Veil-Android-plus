@@ -51,18 +51,12 @@ public class ActivityRegister extends BaseActivity implements View.OnClickListen
     //生成动态数组，并且转入数据
     ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
     Integer[] icons = new Integer[]{
-            R.mipmap.ic_chat_avatar_0,
-            R.mipmap.ic_chat_avatar_1,
-            R.mipmap.ic_chat_avatar_2,
-            R.mipmap.ic_chat_avatar_3,
-            R.mipmap.ic_chat_avatar_4,
-            R.mipmap.ic_chat_avatar_5,
-            R.mipmap.ic_chat_avatar_6,
-            R.mipmap.ic_chat_avatar_7,
-            R.mipmap.ic_chat_avatar_8,
-            R.mipmap.ic_chat_avatar_9,
-            R.mipmap.ic_chat_avatar_10,
-            R.mipmap.ic_chat_avatar_11,
+            R.mipmap.ic_impression_chuantong,
+            R.mipmap.ic_impression_jiaozhen,
+            R.mipmap.ic_impression_huoyue,
+            R.mipmap.ic_impression_humorous,
+            R.mipmap.ic_impression_kaifang,
+            R.mipmap.ic_impression_lanmang
     };
     GridView mGridview;
     TextView mTVConfirm;

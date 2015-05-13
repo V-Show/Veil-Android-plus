@@ -1,5 +1,6 @@
 package com.veiljoy.veil.activity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,6 @@ public class ActivityAccess extends BaseActivity {
     int mOption=0;
     EditText mEtRePwd;
     RadioGroup mOptionRG;
-    boolean isStarted=false;
     Button mBtnConfirm;
     EditText mETUserName;
     EditText mEtPwd;
@@ -79,16 +79,39 @@ public class ActivityAccess extends BaseActivity {
                         return ;
                     }
 
-                    isStarted=!isStarted;
 
-                    if(isStarted){
+                    putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
 
-                        mCommonLoadBar.setVisibility(View.VISIBLE);
-                        mCommonLoadBar.startLoad();
-                    }
-                    else{
-                        mCommonLoadBar.stopLoad();
-                    }
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                            showCustomToast("请稍后,正在提交...");
+                            mCommonLoadBar.setVisibility(View.VISIBLE);
+                            mCommonLoadBar.startLoad();
+                        }
+
+                        @Override
+                        protected Boolean doInBackground(Void... params) {
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            return true;
+
+                        }
+
+                        @Override
+                        protected void onPostExecute(Boolean result) {
+                            super.onPostExecute(result);
+
+                            mCommonLoadBar.stopLoad();
+                            startActivity(ActivityUserInfo.class,null);
+
+                        }
+
+                    });
 
 
 

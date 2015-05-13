@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:paddingTop="30dp"
+
     >
 
 
     <TextView
+        android:id="@+id/guide_tv_character"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/text_checked_color"
-        android:textSize="26sp"
-        android:gravity="left"
-        android:text="What is your character?" />
+        android:textSize="17sp"
+        android:gravity="center"
+        android:text="what do you think of your personality?" />
 
 
 
     <GridView
+        android:layout_below="@+id/guide_tv_character"
+        android:id="@+id/guide_gv_character"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:gravity="center"
-        android:horizontalSpacing="1dp"
-        android:numColumns="4"
+        android:horizontalSpacing="50dp"
+        android:numColumns="2"
+        android:layout_centerHorizontal="true"
         android:listSelector="#00000000"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="14dp">
+        android:verticalSpacing="66dp">
 
     </GridView>
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -36,11 +36,11 @@
     <dimen name="text_size_me">17sp</dimen>
 
     <!-- 性别标识头像  尺寸-->
-    <dimen name="size_gender_height">70dp</dimen>
-    <dimen name="size_gender_width">70dp</dimen>
+    <dimen name="size_gender_height">72dp</dimen>
+    <dimen name="size_gender_width">72dp</dimen>
 
     <!-- 性别标识头像  间距-->
-    <dimen name="gender_margin">40dp</dimen>
+    <dimen name="gender_margin">54dp</dimen>
 
     <!-- 头像选择gridview  的左右间距 -->
     <dimen name="gridview_avatar_margin_right">30dp</dimen>

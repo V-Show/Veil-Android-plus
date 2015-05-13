@@ -1,6 +1,7 @@
 package com.veiljoy.veil.activity;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +46,9 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     State mState=State.TOP;
     LinearLayout membersLayout;
     LinearLayout talkBarLayout;
+    LinearLayout mOptionLayout;
+    LinearLayout mVoiceLayout;
+    LinearLayout mDetailLayout;
     /**
      * integer: linearLayout id
      * Member
@@ -65,14 +69,15 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     private void initViews() {
 
 
+        mOptionLayout=(LinearLayout)this.findViewById(R.id.activity_room_option_layout);
+        mVoiceLayout=(LinearLayout)this.findViewById(R.id.activity_room_voice_layout);
+        mDetailLayout=(LinearLayout)this.findViewById(R.id.activity_room_detail_layout);
 
         mMenu=(ImageButton)this.findViewById(R.id.activity_room__ib_menu);
-
         mBtnTalk = (Button) this.findViewById(R.id.activity_room_btn_talk);
         mTalkLayout = (LinearLayout) this.findViewById(R.id.activity_room_talk_bar_layout);
-        mTalkBar = (LinearLayout) this.findViewById(R.id.activity_room_talk_bar_layout);
+        mTalkBar = (LinearLayout) this.findViewById(R.id.activity_room_talk_bar);
         mImpression=(LinearLayout)this.findViewById(R.id.activity_room_impression);
-
         mUserInfoLayout=(FrameLayout)this.findViewById(R.id.activity_room_bottom_layout);
 
         ViewTreeObserver vto = mUserInfoLayout.getViewTreeObserver();
@@ -149,6 +154,7 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     private void initEvents() {
         mMenu.setOnClickListener(this);
         mBtnTalk.setOnClickListener(this);
+        mDetailLayout.setOnClickListener(this);
     }
 
     private void init() {
@@ -202,12 +208,22 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.activity_room_btn_talk:
+
+
             case R.id.activity_room__ib_menu:
+                Intent intent=new Intent(ActivityRoom.this,ActivitySetting.class);
+                startActivityForResult(intent, 1);
+                //startActivity(ActivitySetting.class,null);
+                break;
+            case R.id.activity_room_detail_layout:
                 if(mState==State.BOTTOM){
                     ObjectAnimator.ofFloat(mTalkLayout, "translationY",0).setDuration(2000).start();
                     mState=State.TOP;
@@ -220,24 +236,32 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
             case R.id.activity_room_member0_layout:
             case R.id.activity_room_member1_layout:
             case R.id.activity_room_member2_layout:
-                int id=v.getId();
-                Set<Integer> set=members.keySet();
-                Iterator<Integer>ite=set.iterator();
-                while (ite.hasNext()){
-                    int key=ite.next();
-                    if(key==id){
-                        members.get(key).name.setTextColor(getResources().getColor(R.color.red));
-                    }
-                    else {
-                        members.get(key).name.setTextColor(getResources().getColor(R.color.gray));
-                    }
-                }
-                talkBarLayout.setVisibility(View.GONE);
+                setMemberFocus(v.getId());
+               mVoiceLayout.setVisibility(View.GONE);
+                mOptionLayout.setVisibility(View.VISIBLE);
                 break;
 
+
             case R.id.activity_room_member3_layout:
-                membersLayout.setVisibility(View.GONE);
+                setMemberFocus(v.getId());
+                mVoiceLayout.setVisibility(View.VISIBLE);
+                mOptionLayout.setVisibility(View.GONE);
                 break;
+        }
+    }
+
+    private void setMemberFocus(int id){
+
+        Set<Integer> set=members.keySet();
+        Iterator<Integer>ite=set.iterator();
+        while (ite.hasNext()){
+            int key=ite.next();
+            if(key==id){
+                members.get(key).name.setTextColor(getResources().getColor(R.color.red));
+            }
+            else {
+                members.get(key).name.setTextColor(getResources().getColor(R.color.gray));
+            }
         }
     }
 
