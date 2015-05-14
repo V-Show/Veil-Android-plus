@@ -57,9 +57,12 @@ public abstract class ActivityChatSupport extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMultiUserChat = AppStates.getMultiUserChat();
-        mMultiUserChat.addMessageListener(new MUCMessageListener());
-        mMultiUserChat.addParticipantStatusListener(new ParticipantStatus());
+        if(mMultiUserChat!=null){
+            mMultiUserChat = AppStates.getMultiUserChat();
+            mMultiUserChat.addMessageListener(new MUCMessageListener());
+            mMultiUserChat.addParticipantStatusListener(new ParticipantStatus());
+        }
+
         // 第一次查询
         messagePool = MessageManager.getInstance(this)
                 .getMessageListByFrom(to, 1, pageSize);
@@ -69,20 +72,24 @@ public abstract class ActivityChatSupport extends BaseActivity {
             messagePool = new ArrayList<IMMessage>();
         }
 
-        mucThread = new MUCThread(mMultiUserChat, mucHandler);
-        mucThread.start();
+        if(mMultiUserChat!=null){
+            mucThread = new MUCThread(mMultiUserChat, mucHandler);
+            mucThread.start();
 
-        // wait for mucThread start
-        while (mucThread.getHandler() == null) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
+            // wait for mucThread start
+            while (mucThread.getHandler() == null) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                }
             }
+
+            android.os.Message message = mucHandler.obtainMessage();
+            message.what = MUCThread.UPDATE_ALL;
+            mucThread.getHandler().sendMessage(message);
         }
 
-        android.os.Message message = mucHandler.obtainMessage();
-        message.what = MUCThread.UPDATE_ALL;
-        mucThread.getHandler().sendMessage(message);
+
     }
 
     private void registerBroadcast() {
@@ -128,17 +135,25 @@ public abstract class ActivityChatSupport extends BaseActivity {
         IMMessage newMessage = makeMessage();
         Message message = new Message();
         message.setBody(newMessage.getmContent());
+        newMessage.setmMessageType(IMMessage.SEND);
 
-        try {
-            Log.v("ChatActivity", "start  sending....");
-            mMultiUserChat.sendMessage(content);
-            Log.v("ChatActivity", "start  sent success!");
-        } catch (SmackException.NotConnectedException e) {
-            e.printStackTrace();
+        if(mMultiUserChat!=null){
+            try {
+                Log.v("ChatActivity", "start  sending....");
+                mMultiUserChat.sendMessage(content);
+                Log.v("ChatActivity", "start  sent success!");
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            }
+            newMessage.setmFrom(mMultiUserChat.getNickname());
+        }
+        else {
+            newMessage.setmFrom("admin");
         }
 
-        newMessage.setmMessageType(IMMessage.SEND);
-        newMessage.setmFrom(mMultiUserChat.getNickname());
+
+
+
         newMessage.setmTime(time);
         messagePool.add(newMessage);
         //MessageManager.getInstance(this).saveIMMessage(newMessage);

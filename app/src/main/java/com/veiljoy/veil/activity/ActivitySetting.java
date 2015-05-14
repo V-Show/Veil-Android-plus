@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.veiljoy.veil.R;
@@ -22,7 +23,7 @@ public class ActivitySetting extends BaseActivity implements View.OnClickListene
     private TextView mIVSubTitle;
     private SwitcherButton mSbRightSwitcherButton;
     private SwitcherButton.onSwitcherButtonClickListener mSwitcherButtonClickListener;
-    private LinearLayout mVoicePlayer;
+    private RelativeLayout mVoicePlayer;
     private ImageButton mBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class ActivitySetting extends BaseActivity implements View.OnClickListene
 
         mBack=(ImageButton)this.findViewById(R.id.include_app_topbar_ib_change);
         mSbRightSwitcherButton=(SwitcherButton)this.findViewById(R.id.activity_setting_voice_switcher);
-        mVoicePlayer=(LinearLayout)this.findViewById(R.id.activity_setting_voice_play_layout);
+        mVoicePlayer=(RelativeLayout)this.findViewById(R.id.activity_setting_voice_play_layout);
         SwitcherButton.SwitcherButtonState state=mSbRightSwitcherButton.getState();
         if(state==SwitcherButton.SwitcherButtonState.RIGHT){
             mVoicePlayer.setVisibility(View.GONE);
@@ -66,7 +67,7 @@ public class ActivitySetting extends BaseActivity implements View.OnClickListene
                 data.putExtra("datacount", (1));
                 ActivitySetting.this.setResult(1, data);
                 this.finish();
-
+                overridePendingTransition(R.anim.push_right_in,R.anim.push_right_out);
                 break;
         }
 

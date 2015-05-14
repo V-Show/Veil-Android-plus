@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
@@ -13,27 +14,46 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.veiljoy.veil.R;
+import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.android.BaseActivity;
+import com.veiljoy.veil.android.BaseApplication;
+import com.veiljoy.veil.bean.UserInfo;
+import com.veiljoy.veil.im.IMMessage;
+import com.veiljoy.veil.im.IMMessageVoiceEntity;
+import com.veiljoy.veil.utils.CommonUtils;
+import com.veiljoy.veil.utils.VoiceUtils;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
  * Created by zhongqihong on 15/5/7.
  */
-public class ActivityRoom extends BaseActivity implements View.OnClickListener {
+public class ActivityRoom extends ActivityChatSupport implements  View.OnLongClickListener,View.OnClickListener {
 
 
+    boolean DEBUG=true;
 
     final String TAG = "ActivityRoom";
+    ListView mLVChat;
+    ChatAdapter mChatAdapter;
     ScrollView previewScroll;
     private boolean drawScroll = true;
+    private boolean isTalking;
+    String avatarPath;
+    private String currMsgType;
+    private String mVoiceFileName = null;
     Animation mTalkBarAnim;
     Button mBtnTalk;
     LinearLayout mTalkLayout;
@@ -49,6 +69,18 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     LinearLayout mOptionLayout;
     LinearLayout mVoiceLayout;
     LinearLayout mDetailLayout;
+    RelativeLayout mChatListLayout;
+    boolean mIsVoiceBtnShow=true;
+    int mCurrFocusMember;
+    private ImageButton mBack;
+    BaseApplication application;
+
+    /*
+ *监控录音时间
+ */
+    long beforeTime;
+    long afterTime;
+    int timeDistance;
     /**
      * integer: linearLayout id
      * Member
@@ -57,17 +89,58 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_room);
+        setContentView(R.layout.activity_chat_room);
+        init();
         initViews();
         initEvents();
 
 
     }
 
+    @Override
+    protected void receiveNewMessage(IMMessage message) {
+
+    }
+
+    @Override
+    protected void refreshMessage(List<IMMessage> messages) {
+        mChatAdapter.refreshList(messagePool);
+        mLVChat.setSelection(messagePool.size());
+    }
+
+    @Override
+    protected IMMessage makeMessage() {
+        IMMessage o = null;
+        IMMessage.Scheme type = IMMessage.Scheme.ofUri(currMsgType);
+        switch (type) {
+            case VOICE:
+                o = new IMMessageVoiceEntity();
+                o.setmUri(IMMessage.Scheme.VOICE.wrap(""));
+                Random r = new Random(System.currentTimeMillis());
+                o.setmMessageType(Math.abs(r.nextInt() % 2));
+                o.setmAvatar(avatarPath);
+                ((IMMessageVoiceEntity) o).setmVoiceTimeRange(Math.abs(r.nextInt() % 20));
+                ((IMMessageVoiceEntity) o).setmVoiceFileName(mVoiceFileName);
+
+                break;
+        }
+
+        return o;
+    }
+
+    @Override
+    protected void updateUserInfo(Map<String, UserInfo> userInfoList) {
+
+    }
 
 
     private void initViews() {
 
+        mChatListLayout=(RelativeLayout)this.findViewById(R.id.activity_room_chat_list_layout);
+
+        mChatAdapter = new ChatAdapter(application, this, getMessages());
+        mLVChat = (ListView) this.findViewById(R.id.activity_room_chat_list);
+        mLVChat.setAdapter(mChatAdapter);
 
         mOptionLayout=(LinearLayout)this.findViewById(R.id.activity_room_option_layout);
         mVoiceLayout=(LinearLayout)this.findViewById(R.id.activity_room_voice_layout);
@@ -79,7 +152,8 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
         mTalkBar = (LinearLayout) this.findViewById(R.id.activity_room_talk_bar);
         mImpression=(LinearLayout)this.findViewById(R.id.activity_room_impression);
         mUserInfoLayout=(FrameLayout)this.findViewById(R.id.activity_room_bottom_layout);
-
+        mBack=(ImageButton)this.findViewById(R.id.include_app_topbar_ib_change);
+        mBack.setVisibility(View.INVISIBLE);
         ViewTreeObserver vto = mUserInfoLayout.getViewTreeObserver();
 
         vto.addOnGlobalLayoutListener(
@@ -95,8 +169,9 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
                 Resources res = getResources();
 
 
+                int talkBarHeight=height+(int)(res.getDimension(R.dimen.chat_room_user_option_padding_top));
 
-                transHeight=layoutHeight - height-(int)(res.getDimension(R.dimen.chat_room_user_option_padding_top));
+                transHeight=layoutHeight - talkBarHeight;
 
 
                 if(mState==State.BOTTOM){
@@ -108,9 +183,14 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
                     ObjectAnimator.ofFloat(mTalkLayout, "translationY",transHeight).setDuration(0).start();
                 }
 
+                FrameLayout.LayoutParams lp=(FrameLayout.LayoutParams) mChatListLayout.getLayoutParams();
+                lp.setMargins(0,0,0,height);
+                mChatListLayout.setLayoutParams(lp);
+
 
                }
         }
+
 
 
     );
@@ -131,6 +211,8 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
         m0.avatar=(ImageView)this.findViewById(R.id.activity_room_iv_member0);
         m0.name=(TextView)this.findViewById(R.id.activity_room_tv_member0);
         members.put(R.id.activity_room_member0_layout,m0);
+        mCurrFocusMember=R.id.activity_room_member0_layout;
+        setMemberFocus(R.id.activity_room_member0_layout);
 
         Member m1=new Member();
         m1.avatar=(ImageView)this.findViewById(R.id.activity_room_iv_member1);
@@ -148,21 +230,29 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
         members.put(R.id.activity_room_member3_layout,m3);
 
 
+
+        mVoiceLayout.setVisibility(View.VISIBLE);
+        mOptionLayout.setVisibility(View.GONE);
+
+
     }
 
 
     private void initEvents() {
         mMenu.setOnClickListener(this);
-        mBtnTalk.setOnClickListener(this);
+        mBtnTalk.setOnLongClickListener(this);
+        mBtnTalk.setOnTouchListener(new OnTalkBtnTouch());
         mDetailLayout.setOnClickListener(this);
     }
 
     private void init() {
-        if (previewScroll.getScrollY() != 0) {
-            previewScroll.smoothScrollTo(0, 0);
-        }
-
-        reLayoutScroll();
+        application = (BaseApplication) getApplication();
+        VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
+//        if (previewScroll.getScrollY() != 0) {
+//            previewScroll.smoothScrollTo(0, 0);
+//        }
+//
+//        reLayoutScroll();
     }
 
     private void reLayoutScroll() {
@@ -221,6 +311,7 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
             case R.id.activity_room__ib_menu:
                 Intent intent=new Intent(ActivityRoom.this,ActivitySetting.class);
                 startActivityForResult(intent, 1);
+                overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
                 //startActivity(ActivitySetting.class,null);
                 break;
             case R.id.activity_room_detail_layout:
@@ -237,8 +328,19 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
             case R.id.activity_room_member1_layout:
             case R.id.activity_room_member2_layout:
                 setMemberFocus(v.getId());
-               mVoiceLayout.setVisibility(View.GONE);
-                mOptionLayout.setVisibility(View.VISIBLE);
+
+                if(mCurrFocusMember==v.getId()){
+                    if(mIsVoiceBtnShow){
+                        mVoiceLayout.setVisibility(View.GONE);
+                        mOptionLayout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        mVoiceLayout.setVisibility(View.VISIBLE);
+                        mOptionLayout.setVisibility(View.GONE);
+                    }
+                    mIsVoiceBtnShow=!mIsVoiceBtnShow;
+                }
+                mCurrFocusMember=v.getId();
                 break;
 
 
@@ -260,9 +362,31 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
                 members.get(key).name.setTextColor(getResources().getColor(R.color.red));
             }
             else {
-                members.get(key).name.setTextColor(getResources().getColor(R.color.gray));
+                members.get(key).name.setTextColor(getResources().getColor(R.color.light_gray));
             }
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.activity_room_btn_talk:
+                if (!isTalking) {
+
+                    Log.v("chatActivity", "start record");
+                    beforeTime = System.currentTimeMillis();
+                    isTalking = true;
+                    currMsgType = IMMessage.Scheme.VOICE.wrap("test");
+                    mVoiceFileName = VoiceUtils.generateFileName();
+
+                    VoiceUtils.getmInstance().startRecord(mVoiceFileName);
+                }
+
+
+                break;
+        }
+
+        return true;
     }
 
     enum State{
@@ -273,5 +397,82 @@ public class ActivityRoom extends BaseActivity implements View.OnClickListener {
     class Member{
         ImageView avatar;
         TextView name;
+    }
+    ///mHeaderHeight
+    class OnTalkBtnTouch implements View.OnTouchListener {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if(event.getAction()==MotionEvent.ACTION_DOWN){
+
+            }
+
+            if (isTalking) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP: {
+                        recordStop();
+                        if(DEBUG) {
+                            new OnVoiceRecordListenerImpl().onResult("");
+                        }
+                    }
+                    break;
+
+                }
+            }
+            return false;
+        }
+    }
+
+    /*
+   * 发送语音消息
+   * */
+    class OnVoiceRecordListenerImpl implements VoiceUtils.OnVoiceRecordListener {
+
+        @Override
+        public void onBackgroundRunning() {
+            Log.v("chatActivity", "onBackgroundRunning");
+        }
+
+        @Override
+        public void onResult(String fileName) {
+            Log.v("chatActivity", "onResult " + fileName);
+
+            if(DEBUG){
+                sendMessage("" + "&"
+                        + (afterTime - beforeTime) / 1000);
+
+                return ;
+            }
+            if (fileName != null) {
+                mVoiceFileName = fileName;
+
+                String path = fileName.substring(fileName.lastIndexOf(File.separator), fileName.length());
+
+                String file = path.substring(1, path.lastIndexOf(VoiceUtils.suffix));
+
+                String voiceFile = CommonUtils.VOICE_SIGN
+                        + CommonUtils.GetImageStr(mVoiceFileName) + "@" + file
+                        + CommonUtils.VOICE_SIGN;
+                Log.v(TAG, "voice file name " + file);
+                sendMessage(voiceFile + "&"
+                        + (afterTime - beforeTime) / 1000);
+
+
+            }
+
+        }
+        @Override
+        public void onPreRecord() {
+            Log.v("chatActivity", "onPreRecord ");
+
+        }
+    }
+    public void recordStop() {
+        Log.v("chatActivity", "stop record");
+        afterTime = System.currentTimeMillis();
+        isTalking = false;
+        VoiceUtils.getmInstance().stop();
+
     }
 }

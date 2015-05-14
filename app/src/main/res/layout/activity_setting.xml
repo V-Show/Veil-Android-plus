@@ -2,265 +2,329 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical" >
+    android:background="@color/common_bg_color"
+    android:orientation="vertical">
+
     <LinearLayout
-        android:id="@+id/activity_chat_user_info_layout"
+        android:id="@+id/activity_setting_header_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/topbar_height"
+        android:layout_height="47dp"
         android:orientation="vertical">
 
-        <include layout="@layout/common_header_layout"
+        <include
+            layout="@layout/common_header_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/text_unchecked_color" />
 
-
     </LinearLayout>
-
-
 
 
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scrollbarStyle="outsideOverlay" >
+        android:scrollbarStyle="outsideOverlay">
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/main_setting_person_information"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:background="@drawable/preference_item"
+                android:layout_height="36dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
                 android:clickable="true"
-                android:gravity="center_vertical" >
+                android:gravity="center_vertical">
 
-                <LinearLayout
-                    android:id="@+id/tab_icon_person"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:layout_marginLeft="8dp"
-                    android:scaleType="matrix" >
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                    android:id="@+id/activity_setting_line0" />
 
-                    <ImageView
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingRight="31dp"
+                    android:paddingLeft="31dp"
+                    android:id="@+id/activity_setting_nick_layout">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:visibility="gone"
-                        android:scaleType="matrix" />
-                </LinearLayout>
+                        android:layout_marginLeft="13dp"
+                        android:text="Nick name"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:layout_width="7dp"
+                        android:layout_height="11dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/mm_submenu" />
+                </RelativeLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                    android:id="@+id/activity_setting_line1"
+                    android:layout_below="@+id/activity_setting_nick_layout" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+
+                >
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                    android:id="@+id/activity_setting_line_2" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingRight="31dp"
+                    android:paddingLeft="31dp"
+                    android:id="@+id/activity_setting_voice_layout">
+
+                    <TextView
+                        android:id="@+id/activity_setting_tv_voice_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="Voice-personal Card"
+                        android:layout_marginLeft="13dp"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <com.veiljoy.veil.android.view.SwitcherButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:clickable="true"
+                        android:id="@+id/activity_setting_voice_switcher" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                    android:layout_below="@+id/activity_setting_voice_layout" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_setting_voice_play_layout"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:gravity="center"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@mipmap/ic_play" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                    android:layout_alignParentBottom="true" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:background="@color/white"
+                android:layout_marginTop="20dp">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                    android:id="@+id/activity_setting_line3" />
+
+                <RelativeLayout
+                    android:paddingLeft="31dp"
+                    android:paddingRight="31dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/activity_setting_notice_layout">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="New message Notification"
+                        android:layout_marginLeft="13dp"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <com.veiljoy.veil.android.view.SwitcherButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:clickable="true"
+                        android:id="@+id/activity_setting_message_switcher" />
+                </RelativeLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                    android:layout_alignParentBottom="true"/>
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="36dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:clickable="true"
+                android:onClick="exit_settings"
+                android:gravity="center_vertical">
+            <View
+                android:id="@+id/activity_setting_line4"
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                     />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingRight="31dp"
+                android:paddingLeft="31dp"
+                android:id="@+id/activity_setting_about_layout">
+
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/tab_icon_person"
-                    android:padding="8dp"
+                    android:text="Log out"
                     android:layout_marginLeft="13dp"
-                    android:text="Nick name"
                     android:textColor="#000"
                     android:textSize="20sp" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="7dp"
+                    android:layout_height="11dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:clickable="true"
-                    android:scaleType="matrix"
-
+                    android:scaleType="fitXY"
                     android:src="@drawable/mm_submenu" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/preference_item"
-                >
-
-                <LinearLayout
-                    android:id="@+id/tab_icon_voice_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:layout_marginLeft="8dp"
-                    android:scaleType="matrix" >
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:visibility="gone"
-                        android:scaleType="matrix" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/tab_icon_voice_layout"
-                    android:padding="8dp"
-                    android:text="Voice-personal Card"
-                    android:layout_marginLeft="13dp"
-                    android:textColor="#000"
-                    android:textSize="20sp"
-                     />
-
-                <com.veiljoy.veil.android.view.SwitcherButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:clickable="true"
-                    android:id="@+id/activity_setting_voice_switcher"
-                    />
 
             </RelativeLayout>
-            <LinearLayout
-                android:id="@+id/activity_setting_voice_play_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:background="@color/common_bg_color"
-                >
 
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@mipmap/ic_play"
-                    />
-
-            </LinearLayout>
-
+                <View
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+               />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/preference_item"
+                android:layout_height="36dp"
                 android:layout_marginTop="20dp"
-                >
-
-                <LinearLayout
-                    android:id="@+id/activity_setting_icon_message_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:layout_marginLeft="8dp"
-                    android:scaleType="matrix" >
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:visibility="gone"
-                        android:scaleType="matrix" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/activity_setting_icon_message_layout"
-                    android:padding="8dp"
-                    android:text="New message Notification"
-                    android:layout_marginLeft="13dp"
-                    android:textColor="#000"
-                    android:textSize="20sp"
-                    />
-
-                <com.veiljoy.veil.android.view.SwitcherButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:clickable="true"
-                    android:id="@+id/activity_setting_message_switcher"
-                    />
-
-            </RelativeLayout>
-
-
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/preference_item"
+                android:background="@color/white"
                 android:clickable="true"
                 android:onClick="exit_settings"
-                android:gravity="center_vertical" >
+                android:gravity="center_vertical">
 
-                <LinearLayout
-                    android:id="@+id/tab_icon_exit"
-                    android:layout_width="wrap_content"
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
+                 />
+
+                <RelativeLayout
+                    android:paddingLeft="31dp"
+                    android:paddingRight="31dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:paddingBottom="5dp"
-                    android:paddingTop="5dp"
-                    android:layout_marginLeft="8dp"
-                    android:scaleType="matrix" >
+                    android:id="@+id/activity_setting_searchapp_layout">
 
-                    <ImageView
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:visibility="gone"
-                        android:scaleType="matrix" />
-                </LinearLayout>
+                        android:text="Search apps"
+                        android:layout_marginLeft="13dp"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/tab_icon_exit"
-                    android:padding="8dp"
-                    android:text="Log out"
-                    android:layout_marginLeft="13dp"
-                    android:textColor="#000"
-                    android:textSize="20sp"
+                    <ImageView
+                        android:layout_width="7dp"
+                        android:layout_height="11dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/mm_submenu" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/text_unchecked_color"
                     />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:scaleType="matrix"
-
-                    android:src="@drawable/mm_submenu" />
             </RelativeLayout>
 
-
-
+            <Button
+                android:layout_marginTop="20dp"
+                android:layout_width="129dp"
+                android:layout_height="33dp"
+                android:background="@drawable/confirm_btn_shape_selector"
+                android:text="Log Out"
+                android:id="@+id/toggleButton"
+                android:layout_gravity="center_horizontal"
+                android:checked="false" />
         </LinearLayout>
+
+
     </ScrollView>
+
+
+
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/activity_chat_user_info_layout"
+        android:layout_below="@+id/activity_setting_header_bar"
         android:background="@mipmap/bg_topbar_shadow"
         android:focusable="true" />
 </LinearLayout>

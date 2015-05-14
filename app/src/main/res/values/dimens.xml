@@ -23,7 +23,7 @@
     <dimen name="head_margin_top">2dp</dimen>
 
     <!-- 功能按钮尺寸 -->
-    <dimen name="button_width">35dp</dimen>
+    <dimen name="button_width">29dp</dimen>
     <dimen name="button_height">35dp</dimen>
 
     <!-- 整块功能栏的高度 -->
@@ -33,7 +33,7 @@
     <dimen name="text_size_friend">14sp</dimen>
 
     <!-- 功能栏当前用户昵称字体 -->
-    <dimen name="text_size_me">17sp</dimen>
+    <dimen name="text_size_me">23sp</dimen>
 
     <!-- 性别标识头像  尺寸-->
     <dimen name="size_gender_height">72dp</dimen>

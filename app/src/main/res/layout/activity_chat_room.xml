@@ -27,29 +27,28 @@
     </LinearLayout>
 
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/activity_room_bottom_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/activity_chat_user_info_layout">
+        android:layout_below="@id/activity_chat_user_info_layout"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/activity_room_chat_list"
+            android:id="@+id/activity_room_chat_list_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-
-            android:layout_marginBottom="66dp">
+            android:layout_height="match_parent"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <ListView
-                    android:id="@+id/activity_chat_list"
+                    android:id="@+id/activity_room_chat_list"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_above="@+id/chat_layout_editor"
                     android:cacheColorHint="@color/transparent"
                     android:divider="#00000000"
                     android:dividerHeight="0dip"
@@ -70,7 +69,6 @@
         <!--android:fillViewport="true">-->
 
         <LinearLayout
-            android:layout_below="@+id/activity_room_chat_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/activity_room_talk_bar_layout"
@@ -172,7 +170,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="6dp"
                                     android:textSize="17sp"
-                                    android:text="Peter"
+                                    android:text="Choffery"
                                     android:textColor="#ff3e3a39" />
                             </LinearLayout>
                         </LinearLayout>
@@ -209,7 +207,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="6dp"
                                     android:textSize="17sp"
-                                    android:text="Peter"
+                                    android:text="Ann"
                                     android:textColor="#ff3e3a39" />
                             </LinearLayout>
                         </LinearLayout>
@@ -400,7 +398,7 @@
         </LinearLayout>
 
         <!--</ScrollView>-->
-    </RelativeLayout>
+    </FrameLayout>
 
     <ImageView
         android:layout_width="fill_parent"
