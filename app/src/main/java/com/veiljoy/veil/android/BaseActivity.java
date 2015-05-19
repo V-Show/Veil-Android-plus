@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public class BaseActivity extends Activity implements IActivitySupport{
+public class BaseActivity extends Activity implements IActivitySupport {
     /**
      * 屏幕的宽度、高度、密度
      */
@@ -35,7 +35,6 @@ public class BaseActivity extends Activity implements IActivitySupport{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -57,11 +56,10 @@ public class BaseActivity extends Activity implements IActivitySupport{
         this.finish();
     }
 
-
     /**
      * 显示自定义Toast提示(来自res) *
      */
-    public  void showCustomToast(int resId) {
+    public void showCustomToast(int resId) {
         View toastRoot = LayoutInflater.from(BaseActivity.this).inflate(
                 R.layout.common_toast, null);
         ((TextView) toastRoot.findViewById(R.id.toast_text))
@@ -87,20 +85,16 @@ public class BaseActivity extends Activity implements IActivitySupport{
         toast.show();
     }
 
-
-
-    protected void LOG(String log){
-        Log.v(this.getClass().getName(),log);
+    protected void LOG(String log) {
+        Log.v(this.getClass().getName(), log);
     }
 
     @Override
     public void startService() {
-
     }
 
     @Override
     public void stopService() {
-
     }
 
     public int getScreenWidth() {
@@ -116,9 +110,11 @@ public class BaseActivity extends Activity implements IActivitySupport{
         super.onDestroy();
         //((BaseApplication)this.getApplication()).exit();
     }
+
     protected void putAsyncTask(AsyncTask<Void, Void, Boolean> asyncTask) {
         mAsyncTasks.add(asyncTask.execute());
     }
+
     protected void clearAsyncTask() {
         Iterator<AsyncTask<Void, Void, Boolean>> iterator = mAsyncTasks
                 .iterator();
@@ -130,7 +126,6 @@ public class BaseActivity extends Activity implements IActivitySupport{
         }
         mAsyncTasks.clear();
     }
-
 
     //宽
 //    public int getViewWidth(LinearLayout view){

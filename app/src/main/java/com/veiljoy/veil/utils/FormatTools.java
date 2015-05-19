@@ -16,16 +16,6 @@ import android.graphics.drawable.Drawable;
  * Bitmap与DrawAble与byte[]与InputStream之间的转换工具类
  */
 public class FormatTools {
-    private static FormatTools tools = new FormatTools();
-
-    public static FormatTools getInstance() {
-        if (tools == null) {
-            tools = new FormatTools();
-            return tools;
-        }
-        return tools;
-    }
-
     // 将byte[]转换成InputStream
     public InputStream Byte2InputStream(byte[] b) {
         ByteArrayInputStream bais = new ByteArrayInputStream(b);
@@ -65,32 +55,32 @@ public class FormatTools {
     }
 
     // 将InputStream转换成Bitmap
-    public Bitmap InputStream2Bitmap(InputStream is) {
+    public static Bitmap InputStream2Bitmap(InputStream is) {
         return BitmapFactory.decodeStream(is);
     }
 
     // Drawable转换成InputStream
     public InputStream Drawable2InputStream(Drawable d) {
-        Bitmap bitmap = this.drawable2Bitmap(d);
-        return this.Bitmap2InputStream(bitmap);
+        Bitmap bitmap = drawable2Bitmap(d);
+        return Bitmap2InputStream(bitmap);
     }
 
     // InputStream转换成Drawable
-    public Drawable InputStream2Drawable(InputStream is) {
-        Bitmap bitmap = this.InputStream2Bitmap(is);
-        return this.bitmap2Drawable(bitmap);
+    public static Drawable InputStream2Drawable(InputStream is) {
+        Bitmap bitmap = InputStream2Bitmap(is);
+        return bitmap2Drawable(bitmap);
     }
 
     // Drawable转换成byte[]
-    public byte[] Drawable2Bytes(Drawable d) {
-        Bitmap bitmap = this.drawable2Bitmap(d);
-        return this.Bitmap2Bytes(bitmap);
+    public static byte[] Drawable2Bytes(Drawable d) {
+        Bitmap bitmap = drawable2Bitmap(d);
+        return Bitmap2Bytes(bitmap);
     }
 
     // byte[]转换成Drawable
-    public Drawable Bytes2Drawable(byte[] b) {
-        Bitmap bitmap = this.Bytes2Bitmap(b);
-        return this.bitmap2Drawable(bitmap);
+    public static Drawable Bytes2Drawable(byte[] b) {
+        Bitmap bitmap = Bytes2Bitmap(b);
+        return bitmap2Drawable(bitmap);
     }
 
     // Bitmap转换成byte[]
@@ -109,7 +99,7 @@ public class FormatTools {
     }
 
     // Drawable转换成Bitmap
-    public Bitmap drawable2Bitmap(Drawable drawable) {
+    public static Bitmap drawable2Bitmap(Drawable drawable) {
         Bitmap bitmap = Bitmap
                 .createBitmap(
                         drawable.getIntrinsicWidth(),
@@ -124,7 +114,7 @@ public class FormatTools {
     }
 
     // Bitmap转换成Drawable
-    public Drawable bitmap2Drawable(Bitmap bitmap) {
+    public static Drawable bitmap2Drawable(Bitmap bitmap) {
         BitmapDrawable bd = new BitmapDrawable(bitmap);
         Drawable d = (Drawable) bd;
         return d;

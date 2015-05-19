@@ -63,7 +63,7 @@ public class IMOFChatImpl implements IMChatBase {
         }
         if (bais == null)
             return null;
-        return FormatTools.getInstance().InputStream2Drawable(bais);
+        return FormatTools.InputStream2Drawable(bais);
     }
 
     /**
