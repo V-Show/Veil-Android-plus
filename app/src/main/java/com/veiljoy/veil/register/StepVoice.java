@@ -11,9 +11,7 @@ import com.veiljoy.veil.activity.ActivityUserInfo;
  */
 public class StepVoice extends RegisterStep {
 
-
     public StepVoice(ActivityUserInfo activity, View contentRootView) {
-
         super(activity, contentRootView);
         initViews();
         initEvents();
@@ -21,45 +19,15 @@ public class StepVoice extends RegisterStep {
 
     @Override
     public void initViews() {
-
     }
 
     @Override
     public void initEvents() {
-
     }
 
     @Override
     public void doNext() {
-        putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                showCustomToast("请稍后,正在进入房间...");
-
-            }
-
-            @Override
-            protected Boolean doInBackground(Void... params) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                return true;
-
-            }
-
-            @Override
-            protected void onPostExecute(Boolean result) {
-                super.onPostExecute(result);
-                mActivity.startActivity(ActivityRoom.class, null);
-
-            }
-
-        });
+        mOnNextActionListener.next();
     }
 
     @Override

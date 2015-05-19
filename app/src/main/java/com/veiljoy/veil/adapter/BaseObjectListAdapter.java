@@ -56,5 +56,4 @@ public class BaseObjectListAdapter extends BaseAdapter {
         return mDatas;
     }
 
-
 }

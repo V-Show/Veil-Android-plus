@@ -17,6 +17,7 @@ import android.widget.SimpleAdapter;
 
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.activity.ActivityUserInfo;
+import com.veiljoy.veil.utils.SharePreferenceUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,7 @@ import java.util.Map;
 public class StepCharacter extends RegisterStep {
 
     ArrayList<HashMap<String, Object>> lstImageItem = new ArrayList<HashMap<String, Object>>();
-    private Bitmap mAvatar=null;
+    private Bitmap mAvatar = null;
     static Integer[] icons = new Integer[]{
             R.mipmap.ic_impression_huoyue,
             R.mipmap.ic_impression_chuantong,
@@ -38,7 +39,7 @@ public class StepCharacter extends RegisterStep {
             R.mipmap.ic_impression_kaifang,
             R.mipmap.ic_impression_lanmang
     };
-    int defaultIcon = 2; // 默认头像选择咖啡杯
+    int mIconIndex = 2; // 默认头像选择咖啡杯
     private boolean mIsChange = true;
     AvatarGridAdapter saImageItems;
 
@@ -49,10 +50,10 @@ public class StepCharacter extends RegisterStep {
         initViews();
         initEvents();
     }
+
     @Override
     public void initViews() {
-
-        mGvCharacter=(GridView)this.findViewById(R.id.guide_gv_character);
+        mGvCharacter = (GridView) this.findViewById(R.id.guide_gv_character);
         for (int i = 0; i < icons.length; i++) {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("ItemImage", icons[i]);//添加图像资源的ID
@@ -60,7 +61,7 @@ public class StepCharacter extends RegisterStep {
             lstImageItem.add(map);
         }
 
-        saImageItems= new AvatarGridAdapter(mActivity,
+        saImageItems = new AvatarGridAdapter(mActivity,
                 lstImageItem,
                 R.layout.icon_avatar_selection,
                 new String[]{"ItemImage"},
@@ -68,10 +69,9 @@ public class StepCharacter extends RegisterStep {
 
         mGvCharacter.setAdapter(saImageItems);
         mGvCharacter.setLongClickable(false);
-        mGvCharacter.setBackgroundDrawable(new BitmapDrawable() );
+        mGvCharacter.setBackgroundDrawable(new BitmapDrawable());
         // 默认头像选择咖啡杯
-       mGvCharacter.setSelection(defaultIcon);
-
+        mGvCharacter.setSelection(mIconIndex);
     }
 
     @Override
@@ -81,12 +81,11 @@ public class StepCharacter extends RegisterStep {
 
     @Override
     public boolean validate() {
-
-        if (mAvatar==null) {
+        if (mAvatar == null) {
             showCustomToast("请选择性格");
-
             return false;
         }
+        SharePreferenceUtil.setAvatar(icons[mIconIndex] + "");
         return true;
     }
 
@@ -94,6 +93,7 @@ public class StepCharacter extends RegisterStep {
     public boolean isChange() {
         return false;
     }
+
     //当AdapterView被单击(触摸屏或者键盘)，则返回的Item单击事件
     class ItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(AdapterView<?> arg0,//The AdapterView where the click happened
@@ -101,7 +101,6 @@ public class StepCharacter extends RegisterStep {
                                 int position,//The position of the view in the adapter
                                 long arg3//The row id of the item that was clicked
         ) {
-
             saImageItems.setSelectedPosition(position);
 
             saImageItems.notifyDataSetInvalidated();
@@ -110,17 +109,17 @@ public class StepCharacter extends RegisterStep {
             HashMap<String, Object> item = (HashMap<String, Object>) arg0.getItemAtPosition(position);
 
             mAvatar = BitmapFactory.decodeResource(mActivity.getResources(), icons[position]);
+            mIconIndex = position;
         }
     }
 
     class AvatarGridAdapter extends SimpleAdapter {
-
-
         LayoutInflater inflater;
+
         public AvatarGridAdapter(Context context, List<? extends Map<String, ?>> data,
                                  int resource, String[] from, int[] to) {
             super(context, data, resource, from, to);
-            inflater=LayoutInflater.from(context);
+            inflater = LayoutInflater.from(context);
         }
 
         private int selectedPosition = 0;// 选中的位置
@@ -129,36 +128,32 @@ public class StepCharacter extends RegisterStep {
             selectedPosition = position;
         }
 
-
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            if(convertView==null){
-                convertView=inflater.inflate(R.layout.register_avatar_icon,null);
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.register_avatar_icon, null);
 //                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 //                lp.gravity = Gravity.LEFT;
 //                convertView.setLayoutParams(lp);
-                holder=new ViewHolder();
-                holder.icon=(ImageView)convertView.findViewById(R.id.register_avatar_icon);
+                holder = new ViewHolder();
+                holder.icon = (ImageView) convertView.findViewById(R.id.register_avatar_icon);
                 holder.icon.setImageResource(icons[position]);
                 holder.icon.setLongClickable(false);
                 convertView.setTag(holder);
-            }
-            else{
-                holder=(ViewHolder)convertView.getTag();
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
             if (position == selectedPosition) {
-               // holder.icon.setBackgroundResource(R.drawable.bg_register_avatar_selector);
-            }
-            else{
+                // holder.icon.setBackgroundResource(R.drawable.bg_register_avatar_selector);
+            } else {
                 holder.icon.setBackgroundResource(0);
             }
             return convertView;
         }
 
-        class ViewHolder{
+        class ViewHolder {
             ImageView icon;
         }
-
     }
 }

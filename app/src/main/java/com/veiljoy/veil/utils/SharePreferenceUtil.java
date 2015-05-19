@@ -36,6 +36,10 @@ public class SharePreferenceUtil {
         return sp.getString("id", "");
     }
 
+    /**
+     * get the nickname of user
+     * @return the empty value is ""
+     */
     public static String getName() {
         return sp.getString("name", "");
     }
@@ -91,20 +95,37 @@ public class SharePreferenceUtil {
         return sp.getBoolean("isFirst", true);
     }
 
+    /**
+     * save gender to share preference
+     * @param gender 0: male, 1: female
+     */
     public static void setGender(int gender) {
         editor.putInt("gender", gender);
         editor.commit();
     }
 
+    /**
+     * get gender from share preference
+     * @return gender 0: male, 1: female
+     */
     public static int getGender() {
         return sp.getInt("gender", -1);
     }
 
+    /**
+     * save the avatar to share preference
+     * @param avatar
+     *  the file name of image or resource id
+     */
     public static void setAvatar(String avatar) {
         editor.putString("avatar", avatar);
         editor.commit();
     }
 
+    /**
+     * get the avatar
+     * @return the file name of image or resource id, the empty value is "default_image"
+     */
     public static String getAvatar() {
         return sp.getString("avatar", "default_image");
     }
@@ -149,15 +170,23 @@ public class SharePreferenceUtil {
         editor.putInt("status", status);
         editor.commit();
     }
+
     public static void setRoom(String name) {
-        Log.v("MUCRoomManager", "name: " + name );
+        Log.v("MUCRoomManager", "name: " + name);
         editor.putString("room_name", name);
         editor.commit();
     }
+
     public static String getRoom() {
         return sp.getString("room_name", "null");
     }
 
+    public static void setVCardUploaded(String account, boolean uploaded) {
+        editor.putBoolean("vCardUploaded" + account, uploaded);
+        editor.commit();
+    }
 
-
+    public static boolean getVCardUploaded(String account) {
+        return sp.getBoolean("vCardUploaded" + account, false);
+    }
 }
