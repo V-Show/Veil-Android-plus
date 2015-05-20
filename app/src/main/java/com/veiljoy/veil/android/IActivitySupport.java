@@ -8,5 +8,4 @@ public interface IActivitySupport {
     public void startService();
 
     public void stopService();
-
 }

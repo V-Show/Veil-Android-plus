@@ -20,6 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.veiljoy.spark.android.core.SparkApplication;
+import com.veiljoy.spark.core.SimpleSparkListener;
+import com.veiljoy.spark.core.SparkListener;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.adapter.ChatAdapter;
 import com.veiljoy.veil.android.BaseActivity;
@@ -29,6 +32,7 @@ import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
 import com.veiljoy.veil.imImpl.IMMessageItem;
 import com.veiljoy.veil.utils.CommonUtils;
+import com.veiljoy.veil.utils.FormatTools;
 import com.veiljoy.veil.utils.VoiceUtils;
 
 import java.io.File;
@@ -42,8 +46,7 @@ import java.util.Set;
 /**
  * Created by zhongqihong on 15/5/7.
  */
-public class ActivityRoom extends ActivityChatSupport implements  View.OnLongClickListener,View.OnClickListener {
-
+public class ActivityRoom extends ActivityChatSupport implements View.OnLongClickListener, View.OnClickListener {
 
 
 
@@ -59,23 +62,32 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
     Animation mTalkBarAnim;
     Button mBtnTalk;
     LinearLayout mTalkLayout;
-    LinearLayout mTalkBar ;
+    LinearLayout mTalkBar;
     FrameLayout mUserInfoLayout;
     ScrollView mScrollView;
     LinearLayout mImpression;
     ImageButton mMenu;
-    int transHeight=0;
-    State mState=State.TOP;
+    int transHeight = 0;
+    State mState = State.TOP;
     LinearLayout membersLayout;
     LinearLayout talkBarLayout;
     LinearLayout mOptionLayout;
     LinearLayout mVoiceLayout;
     LinearLayout mDetailLayout;
     RelativeLayout mChatListLayout;
-    boolean mIsVoiceBtnShow=true;
+    boolean mIsVoiceBtnShow = true;
     int mCurrFocusMember;
     private ImageButton mBack;
     BaseApplication application;
+    SparkApplication mApp;
+    SparkListener mSparkListener;
+    int mSparkState = 0; // 0: idle, 1: connecting, 2: logging in, 3: signing up, 4: rubbing, 5: entering room
+    final int MemberIds[] = {
+            0,
+            R.id.activity_room_member0_layout,
+            R.id.activity_room_member1_layout,
+            R.id.activity_room_member2_layout
+    };
 
     /*当前正在播放的语言*/
     int mCurrPlayItem=0;
@@ -93,17 +105,32 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
     /**
      * integer: linearLayout id
      * Member
-     * **/
-    Map<Integer,Member>members=new HashMap<>();
+     * *
+     */
+    Map<Integer, Member> members = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mApp = (SparkApplication) this.getApplication();
+        mSparkListener = new RoomSparkListener();
+        mSparkState = 0;
         setContentView(R.layout.activity_chat_room);
         init();
         initViews();
         initEvents();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mApp.registerSparkListener(mSparkListener);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mApp.unregisterSparkListener(mSparkListener);
     }
 
     private void clearMessage(){
@@ -114,7 +141,6 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
 
     @Override
     protected void receiveNewMessage(IMMessage message) {
-
     }
 
     @Override
@@ -167,113 +193,103 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
     }
     @Override
     protected void updateUserInfo(Map<String, UserInfo> userInfoList) {
-
     }
 
-
     private void initViews() {
-
-        mChatListLayout=(RelativeLayout)this.findViewById(R.id.activity_room_chat_list_layout);
+        mChatListLayout = (RelativeLayout) this.findViewById(R.id.activity_room_chat_list_layout);
 
         mChatAdapter = new ChatAdapter(application, this, getMessages());
         mLVChat = (ListView) this.findViewById(R.id.activity_room_chat_list);
         mLVChat.setAdapter(mChatAdapter);
 
-        mOptionLayout=(LinearLayout)this.findViewById(R.id.activity_room_option_layout);
-        mVoiceLayout=(LinearLayout)this.findViewById(R.id.activity_room_voice_layout);
-        mDetailLayout=(LinearLayout)this.findViewById(R.id.activity_room_detail_layout);
+        mOptionLayout = (LinearLayout) this.findViewById(R.id.activity_room_option_layout);
+        mVoiceLayout = (LinearLayout) this.findViewById(R.id.activity_room_voice_layout);
+        mDetailLayout = (LinearLayout) this.findViewById(R.id.activity_room_detail_layout);
 
-        mMenu=(ImageButton)this.findViewById(R.id.activity_room__ib_menu);
+        mMenu = (ImageButton) this.findViewById(R.id.activity_room__ib_menu);
         mBtnTalk = (Button) this.findViewById(R.id.activity_room_btn_talk);
         mTalkLayout = (LinearLayout) this.findViewById(R.id.activity_room_talk_bar_layout);
         mTalkBar = (LinearLayout) this.findViewById(R.id.activity_room_talk_bar);
-        mImpression=(LinearLayout)this.findViewById(R.id.activity_room_impression);
-        mUserInfoLayout=(FrameLayout)this.findViewById(R.id.activity_room_bottom_layout);
-        mBack=(ImageButton)this.findViewById(R.id.include_app_topbar_ib_change);
+        mImpression = (LinearLayout) this.findViewById(R.id.activity_room_impression);
+        mUserInfoLayout = (FrameLayout) this.findViewById(R.id.activity_room_bottom_layout);
+        mBack = (ImageButton) this.findViewById(R.id.include_app_topbar_ib_change);
         mBack.setVisibility(View.INVISIBLE);
         ViewTreeObserver vto = mUserInfoLayout.getViewTreeObserver();
 
         vto.addOnGlobalLayoutListener(
-             new ViewTreeObserver.OnGlobalLayoutListener(){
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        mTalkLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        int layoutHeight = mUserInfoLayout.getMeasuredHeight();
 
-            @Override
-             public void onGlobalLayout() {
-                mTalkLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                int layoutHeight = mUserInfoLayout.getMeasuredHeight();
+                        int height = mTalkBar.getMeasuredHeight();
 
-                int height= mTalkBar.getMeasuredHeight();
-
-                Resources res = getResources();
-
-
-                int talkBarHeight=height+(int)(res.getDimension(R.dimen.chat_room_user_option_padding_top));
-
-                transHeight=layoutHeight - talkBarHeight;
+                        Resources res = getResources();
 
 
-                if(mState==State.BOTTOM){
-                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",0).setDuration(2000).start();
-                    mState=State.TOP;
+                        int talkBarHeight = height + (int) (res.getDimension(R.dimen.chat_room_user_option_padding_top));
+
+                        transHeight = layoutHeight - talkBarHeight;
+
+
+                        if (mState == State.BOTTOM) {
+                            ObjectAnimator.ofFloat(mTalkLayout, "translationY", 0).setDuration(2000).start();
+                            mState = State.TOP;
+                        } else if (mState == State.TOP) {
+                            mState = State.BOTTOM;
+                            ObjectAnimator.ofFloat(mTalkLayout, "translationY", transHeight).setDuration(0).start();
+                        }
+
+                        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mChatListLayout.getLayoutParams();
+                        lp.setMargins(0, 0, 0, height);
+                        mChatListLayout.setLayoutParams(lp);
+                    }
                 }
-                else if(mState==State.TOP){
-                    mState=State.BOTTOM;
-                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",transHeight).setDuration(0).start();
-                }
+        );
 
-                FrameLayout.LayoutParams lp=(FrameLayout.LayoutParams) mChatListLayout.getLayoutParams();
-                lp.setMargins(0,0,0,height);
-                mChatListLayout.setLayoutParams(lp);
+        membersLayout = (LinearLayout) this.findViewById(R.id.activity_room_members_layout);
+        talkBarLayout = (LinearLayout) this.findViewById(R.id.activity_room_talk_bar_layout);
 
-
-               }
-        }
-
-
-
-    );
-
-        membersLayout=(LinearLayout)this.findViewById(R.id.activity_room_members_layout);
-        talkBarLayout=(LinearLayout)this.findViewById(R.id.activity_room_talk_bar_layout);
-
-        LinearLayout m0Layout=(LinearLayout)this.findViewById(R.id.activity_room_member0_layout);
-        LinearLayout m1Layout=(LinearLayout)this.findViewById(R.id.activity_room_member1_layout);
-        LinearLayout m2Layout=(LinearLayout)this.findViewById(R.id.activity_room_member2_layout);
-        LinearLayout m3Layout=(LinearLayout)this.findViewById(R.id.activity_room_member3_layout);
+        LinearLayout m0Layout = (LinearLayout) this.findViewById(R.id.activity_room_member0_layout);
+        LinearLayout m1Layout = (LinearLayout) this.findViewById(R.id.activity_room_member1_layout);
+        LinearLayout m2Layout = (LinearLayout) this.findViewById(R.id.activity_room_member2_layout);
+        LinearLayout m3Layout = (LinearLayout) this.findViewById(R.id.activity_room_member3_layout);
         m0Layout.setOnClickListener(this);
         m1Layout.setOnClickListener(this);
         m2Layout.setOnClickListener(this);
         m3Layout.setOnClickListener(this);
 
-        Member m0=new Member();
-        m0.avatar=(ImageView)this.findViewById(R.id.activity_room_iv_member0);
-        m0.name=(TextView)this.findViewById(R.id.activity_room_tv_member0);
-        members.put(R.id.activity_room_member0_layout,m0);
-        mCurrFocusMember=R.id.activity_room_member0_layout;
+        Member m0 = new Member();
+        m0.avatar = (ImageView) this.findViewById(R.id.activity_room_iv_member0);
+        m0.name = (TextView) this.findViewById(R.id.activity_room_tv_member0);
+        members.put(R.id.activity_room_member0_layout, m0);
+        mCurrFocusMember = R.id.activity_room_member0_layout;
         setMemberFocus(R.id.activity_room_member0_layout);
 
-        Member m1=new Member();
-        m1.avatar=(ImageView)this.findViewById(R.id.activity_room_iv_member1);
-        m1.name=(TextView)this.findViewById(R.id.activity_room_tv_member1);
-        members.put(R.id.activity_room_member1_layout,m1);
+        Member m1 = new Member();
+        m1.avatar = (ImageView) this.findViewById(R.id.activity_room_iv_member1);
+        m1.name = (TextView) this.findViewById(R.id.activity_room_tv_member1);
+        members.put(R.id.activity_room_member1_layout, m1);
 
-        Member m2=new Member();
-        m2.avatar=(ImageView)this.findViewById(R.id.activity_room_iv_member2);
-        m2.name=(TextView)this.findViewById(R.id.activity_room_tv_member2);
-        members.put(R.id.activity_room_member2_layout,m2);
+        Member m2 = new Member();
+        m2.avatar = (ImageView) this.findViewById(R.id.activity_room_iv_member2);
+        m2.name = (TextView) this.findViewById(R.id.activity_room_tv_member2);
+        members.put(R.id.activity_room_member2_layout, m2);
 
-        Member m3=new Member();
-        m3.avatar=(ImageView)this.findViewById(R.id.activity_room_iv_member3);
-        m3.name=(TextView)this.findViewById(R.id.activity_room_tv_member3);
-        members.put(R.id.activity_room_member3_layout,m3);
-
-
+        Member m3 = new Member();
+        m3.avatar = (ImageView) this.findViewById(R.id.activity_room_iv_member3);
+        m3.name = (TextView) this.findViewById(R.id.activity_room_tv_member3);
+        members.put(R.id.activity_room_member3_layout, m3);
 
         mVoiceLayout.setVisibility(View.VISIBLE);
         mOptionLayout.setVisibility(View.GONE);
 
-
+        for (int index = 1; index < 4; index++) {
+            members.get(MemberIds[index]).name.setText("empty");
+            members.get(MemberIds[index]).avatar.setVisibility(View.INVISIBLE);
+        }
     }
-
 
     private void initEvents() {
         mMenu.setOnClickListener(this);
@@ -294,73 +310,31 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
 //        reLayoutScroll();
     }
 
-//    private void reLayoutScroll() {
-//
-//
-//        previewScroll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//
-//            View viewGap;
-//
-//            @Override
-//            public void onGlobalLayout() {
-//                viewGap = findViewById(R.id.chat_bottom_bar_user_layout);
-//                final int pictureHeight = viewGap.getLayoutParams().height;
-//                Log.d("PreviewHotActivity", "reLayoutScroll,pictureH=" + pictureHeight
-//                        + ",scrollH=" + previewScroll.getHeight());
-//                viewGap.getLayoutParams().height = previewScroll.getHeight();
-//
-//                if (pictureHeight == previewScroll.getHeight()) {
-//                    drawScroll = true;
-//                    previewScroll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//                } else {
-//                    drawScroll = false;
-//                }
-//            }
-//        });
-//        previewScroll.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//
-//            @Override
-//            public boolean onPreDraw() {
-//                if (drawScroll) {
-//                    previewScroll.getViewTreeObserver().removeOnPreDrawListener(this);
-//                }
-//                return drawScroll;
-//            }
-//        });
-//    }
-//
-//    private void smoothScrollMore() {
-//        if (previewScroll.getScrollY() != 0) {
-//            previewScroll.smoothScrollTo(0, 0);
-//        } else {
-//            previewScroll.smoothScrollTo(0, previewScroll.getMaxScrollAmount());
-//        }
-//    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-
             case R.id.activity_room__ib_menu:
-                Intent intent=new Intent(ActivityRoom.this,ActivitySetting.class);
+                Intent intent = new Intent(ActivityRoom.this, ActivitySetting.class);
                 startActivityForResult(intent, 1);
-                overridePendingTransition(R.anim.push_left_in,R.anim.push_left_out);
+                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
                 //startActivity(ActivitySetting.class,null);
                 break;
             case R.id.activity_room_detail_layout:
-                if(mState==State.BOTTOM){
-                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",0).setDuration(2000).start();
-                    mState=State.TOP;
-                }
-                else if(mState==State.TOP){
-                    mState=State.BOTTOM;
-                    ObjectAnimator.ofFloat(mTalkLayout, "translationY",transHeight).setDuration(2000).start();
+                if (mState == State.BOTTOM) {
+                    ObjectAnimator.ofFloat(mTalkLayout, "translationY", 0).setDuration(2000).start();
+                    mState = State.TOP;
+                } else if (mState == State.TOP) {
+                    mState = State.BOTTOM;
+                    ObjectAnimator.ofFloat(mTalkLayout, "translationY", transHeight).setDuration(2000).start();
                 }
                 break;
             case R.id.activity_room_member0_layout:
@@ -368,23 +342,22 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
             case R.id.activity_room_member2_layout:
 
 
+
                 setMemberFocus(v.getId());
                // clearMessage();
                 if(mCurrFocusMember==v.getId()){
                     if(mIsVoiceBtnShow){
+
                         mVoiceLayout.setVisibility(View.GONE);
                         mOptionLayout.setVisibility(View.VISIBLE);
-                    }
-                    else {
+                    } else {
                         mVoiceLayout.setVisibility(View.VISIBLE);
                         mOptionLayout.setVisibility(View.GONE);
                     }
-                    mIsVoiceBtnShow=!mIsVoiceBtnShow;
+                    mIsVoiceBtnShow = !mIsVoiceBtnShow;
                 }
-                mCurrFocusMember=v.getId();
+                mCurrFocusMember = v.getId();
                 break;
-
-
             case R.id.activity_room_member3_layout:
                 setMemberFocus(v.getId());
                 mVoiceLayout.setVisibility(View.VISIBLE);
@@ -393,16 +366,14 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
         }
     }
 
-    private void setMemberFocus(int id){
-
-        Set<Integer> set=members.keySet();
-        Iterator<Integer>ite=set.iterator();
-        while (ite.hasNext()){
-            int key=ite.next();
-            if(key==id){
+    private void setMemberFocus(int id) {
+        Set<Integer> set = members.keySet();
+        Iterator<Integer> ite = set.iterator();
+        while (ite.hasNext()) {
+            int key = ite.next();
+            if (key == id) {
                 members.get(key).name.setTextColor(getResources().getColor(R.color.red));
-            }
-            else {
+            } else {
                 members.get(key).name.setTextColor(getResources().getColor(R.color.light_gray));
             }
         }
@@ -423,30 +394,27 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
                     if(!DEBUG)
                          VoiceUtils.getmInstance().startRecord(mVoiceFileName);
                 }
-
-
                 break;
         }
 
         return true;
     }
 
-    enum State{
+    enum State {
         TOP,
         BOTTOM
     }
 
-    class Member{
+    class Member {
         ImageView avatar;
         TextView name;
     }
+
     ///mHeaderHeight
     class OnTalkBtnTouch implements View.OnTouchListener {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-
-            if(event.getAction()==MotionEvent.ACTION_DOWN){
-
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
             }
 
             if (isTalking) {
@@ -454,9 +422,11 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP: {
 
+
                         if(DEBUG) {
                             afterTime = System.currentTimeMillis();
                             isTalking = false;
+
                             new OnVoiceRecordListenerImpl().onResult("");
                         }
                         else {
@@ -494,11 +464,11 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
         public void onResult(String fileName) {
             Log.v("chatActivity", "onResult " + fileName);
 
-            if(DEBUG){
+            if (DEBUG) {
                 sendMessage("" + "&"
                         + (afterTime - beforeTime) / 1000);
 
-                return ;
+                return;
             }
             if (fileName != null) {
                 mVoiceFileName = fileName;
@@ -518,17 +488,57 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
             }
 
         }
+
         @Override
         public void onPreRecord() {
 
 
         }
     }
+
     public void recordStop() {
         Log.v("chatActivity", "stop record");
         afterTime = System.currentTimeMillis();
         isTalking = false;
         VoiceUtils.getmInstance().stop();
+    }
 
+    class RoomSparkListener extends SimpleSparkListener {
+        @Override
+        public void onReceiveMessage(String from, String body, String subject) {
+        }
+
+        @Override
+        public void onJoin(int index, com.veiljoy.spark.core.UserInfo[] users) {
+            if (index == 0) {
+                // room owner
+                TextView name = (TextView) findViewById(R.id.common_header_layout_title);
+                name.setText(users[index].getNickname());
+            } else {
+                final int ids[] = {
+                        0,
+                        R.id.activity_room_member0_layout,
+                        R.id.activity_room_member1_layout,
+                        R.id.activity_room_member2_layout
+                };
+                members.get(ids[index]).name.setText(users[index].getNickname());
+                members.get(ids[index]).avatar.setVisibility(View.VISIBLE);
+                members.get(ids[index]).avatar.setImageBitmap(FormatTools.Bytes2Bitmap(users[index].getAvatar()));
+            }
+        }
+
+        @Override
+        public void onLeft(int index, com.veiljoy.spark.core.UserInfo[] users) {
+            if (index > 0) {
+                final int ids[] = {
+                        0,
+                        R.id.activity_room_member0_layout,
+                        R.id.activity_room_member1_layout,
+                        R.id.activity_room_member2_layout
+                };
+                members.get(ids[index]).name.setText("empty");
+                members.get(ids[index]).avatar.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 }

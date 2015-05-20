@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMessage>{
+public class IMMessage extends BaseInfo implements Parcelable, Comparable<IMMessage> {
 
 
     private String mTo;
@@ -32,31 +32,32 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
     public static final int SEND = 1;
     public static final String KEY_TIME = "immessage.time";
     public static final String IMMESSAGE_KEY = "immessage.key";
+
     @Override
     public int compareTo(IMMessage oth) {
         if (null == this.getmTime() || null == oth.getmTime()) {
-			return 0;
-		}
-		String format = null;
-		String time1 = "";
-		String time2 = "";
-		if (this.getmTime().length() == oth.getmTime().length()
-				&& this.getmTime().length() == 23) {
-			time1 = this.getmTime();
-			time2 = oth.getmTime();
-			format = Constants.MS_FORMART;
-		} else {
-			time1 = this.getmTime().substring(0, 19);
-			time2 = oth.getmTime().substring(0, 19);
-		}
-		Date da1 = DateUtils.str2Date(time1, format);
-		Date da2 = DateUtils.str2Date(time2, format);
-		if (da1.before(da2)) {
-			return -1;
-		}
-		if (da2.before(da1)) {
-			return 1;
-		}
+            return 0;
+        }
+        String format = null;
+        String time1 = "";
+        String time2 = "";
+        if (this.getmTime().length() == oth.getmTime().length()
+                && this.getmTime().length() == 23) {
+            time1 = this.getmTime();
+            time2 = oth.getmTime();
+            format = Constants.MS_FORMART;
+        } else {
+            time1 = this.getmTime().substring(0, 19);
+            time2 = oth.getmTime().substring(0, 19);
+        }
+        Date da1 = DateUtils.str2Date(time1, format);
+        Date da2 = DateUtils.str2Date(time2, format);
+        if (da1.before(da2)) {
+            return -1;
+        }
+        if (da2.before(da1)) {
+            return 1;
+        }
 
         return 0;
     }
@@ -72,12 +73,13 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
         dest.writeString(mContent);
         dest.writeString(mTime);
         dest.writeString(mFrom);
-        if(mMessageType==SEND)
+        if (mMessageType == SEND)
             dest.writeInt(0);
         else
             dest.writeInt(1);
 
     }
+
     public static final Parcelable.Creator<IMMessage> CREATOR = new Parcelable.Creator<IMMessage>() {
 
         @Override
@@ -87,11 +89,10 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
             message.setmContent(source.readString());
             message.setmTime(source.readString());
             message.setmFrom(source.readString());
-            int msg_type=source.readInt();
-            if(msg_type==0){
+            int msg_type = source.readInt();
+            if (msg_type == 0) {
                 message.setmMessageType(SEND);
-            }
-            else{
+            } else {
                 message.setmMessageType(RECV);
             }
             return message;
@@ -107,7 +108,7 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
 
     public enum Scheme {
 
-        TEXT("text"),MAP("map"), FILE("file"), IMAGE("image"), VOICE("voice"), UNKNOWN("");
+        TEXT("text"), MAP("map"), FILE("file"), IMAGE("image"), VOICE("voice"), UNKNOWN("");
 
 
         private String scheme;
@@ -157,7 +158,7 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
             return uri.substring(uriPrefix.length());
         }
 
-        public String getScheme(){
+        public String getScheme() {
 
             return this.scheme;
         }
@@ -251,7 +252,6 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
         this.mUri = mUri;
     }
 
-
     public int getmRead() {
         return mRead;
     }
@@ -259,4 +259,5 @@ public class IMMessage extends BaseInfo  implements Parcelable, Comparable<IMMes
     public void setmRead(int mRead) {
         this.mRead = mRead;
     }
+
 }

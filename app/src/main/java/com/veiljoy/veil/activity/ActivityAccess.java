@@ -7,6 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 
+import com.veiljoy.spark.android.core.SparkApplication;
+import com.veiljoy.spark.core.SimpleSparkListener;
+import com.veiljoy.spark.core.SparkAction;
+import com.veiljoy.spark.core.SparkError;
+import com.veiljoy.spark.core.SparkListener;
 import com.veiljoy.veil.R;
 import com.veiljoy.veil.android.BaseActivity;
 import com.veiljoy.veil.android.view.CommonLoadBar;
@@ -19,127 +24,105 @@ import com.veiljoy.veil.utils.StringUtils;
 public class ActivityAccess extends BaseActivity {
     CallBackProcessor mCallBackProcessor;
     CommonLoadBar mCommonLoadBar;
-    int mOption=0;
+    int mOption = 0; // 0: sign in, 1: sign up
     EditText mEtRePwd;
     RadioGroup mOptionRG;
     Button mBtnConfirm;
     EditText mETUserName;
     EditText mEtPwd;
-    String mAccount=null;
+    String mAccount = null;
     String pwd = null;
     String rePwd = null;
+    SparkApplication mApp;
+    SparkListener mSparkListener;
+    int mSparkState = 0; // 0: idle, 1: connecting, 2: logging in, 3: signing up
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mApp = (SparkApplication) this.getApplication();
+        mSparkListener = new AccessSparkListener();
+        mSparkState = 0;
         setContentView(R.layout.activity_access);
         initViews();
         initEvents();
         init();
-
     }
 
-    public void initViews(){
-        mETUserName=(EditText)this.findViewById(R.id.activity_access_username);
-        mEtPwd=(EditText)this.findViewById(R.id.activity_access_password);
-        mEtRePwd=(EditText)this.findViewById(R.id.activity_access_repeat_password);
-        mOptionRG=(RadioGroup)this.findViewById(R.id.activity_access_radiogroup);
-        mCommonLoadBar=(CommonLoadBar)this.findViewById(R.id.activity_access_load);
-        mBtnConfirm=(Button)this.findViewById(R.id.activity_access_btn_confirm);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mApp.registerSparkListener(mSparkListener);
     }
 
-    public void clearUp(){
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mApp.unregisterSparkListener(mSparkListener);
+    }
+
+    public void initViews() {
+        mETUserName = (EditText) this.findViewById(R.id.activity_access_username);
+        mEtPwd = (EditText) this.findViewById(R.id.activity_access_password);
+        mEtRePwd = (EditText) this.findViewById(R.id.activity_access_repeat_password);
+        mOptionRG = (RadioGroup) this.findViewById(R.id.activity_access_radiogroup);
+        mCommonLoadBar = (CommonLoadBar) this.findViewById(R.id.activity_access_load);
+        mBtnConfirm = (Button) this.findViewById(R.id.activity_access_btn_confirm);
+    }
+
+    public void clearUp() {
         mETUserName.setText("");
         mEtPwd.setText("");
         mEtRePwd.setText("");
     }
 
-
-
-    public void initEvents(){
+    public void initEvents() {
         mOptionRG.setOnCheckedChangeListener(new OnOptionCheckedChangeListener());
         mBtnConfirm.setOnClickListener(new OnViewClickedListener());
-
     }
 
-    public void init(){
-        mCallBackProcessor=new CallBackProcessor();
+    public void init() {
+        mCallBackProcessor = new CallBackProcessor();
     }
 
-    class OnViewClickedListener implements View.OnClickListener{
-
+    class OnViewClickedListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.activity_access_btn_confirm:
-
-                    if(!confirm())
-                    {
-                        return ;
+                    if (!confirm()) {
+                        return;
                     }
+                    if (mSparkState == 0) {
+                        mApp.connect();
+                        mSparkState = 1;
 
-
-                    putAsyncTask(new AsyncTask<Void, Void, Boolean>() {
-
-                        @Override
-                        protected void onPreExecute() {
-                            super.onPreExecute();
-                            showCustomToast("请稍后,正在提交...");
-                            mCommonLoadBar.setVisibility(View.VISIBLE);
-                            mCommonLoadBar.startLoad();
-                        }
-
-                        @Override
-                        protected Boolean doInBackground(Void... params) {
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            return true;
-
-                        }
-
-                        @Override
-                        protected void onPostExecute(Boolean result) {
-                            super.onPostExecute(result);
-
-                            mCommonLoadBar.stopLoad();
-                            startActivity(ActivityUserInfo.class,null);
-
-                        }
-
-                    });
-
-
-
+                        showCustomToast("请稍后,正在提交...");
+                        mCommonLoadBar.setVisibility(View.VISIBLE);
+                        mCommonLoadBar.startLoad();
+                    }
                     break;
             }
-
         }
     }
 
-
-    public boolean confirm(){
-        if(!validateAccount()){
+    public boolean confirm() {
+        if (!validateAccount()) {
             return false;
         }
-                    /*
-                    * trying to log in
-                    * */
-        if(mOption==0){
-            if(!validatePsw()){
+        /*
+        * trying to log in
+        * */
+        if (mOption == 0) {
+            if (!validatePsw()) {
                 return false;
             }
         }
-                    /*
-                    * trying to log out
-                    * */
-
-        if(mOption==1){
-            if(!validateRePsw()){
+        /*
+        * trying to log out
+        * */
+        if (mOption == 1) {
+            if (!validateRePsw()) {
                 return false;
             }
         }
@@ -147,10 +130,13 @@ public class ActivityAccess extends BaseActivity {
         return true;
     }
 
-
     class OnOptionCheckedChangeListener implements RadioGroup.OnCheckedChangeListener {
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
+            // 正在网络连接时不能切换标签
+            if (mSparkState != 0)
+                return;
+
             switch (checkedId) {
                 case R.id.activity_access_sign_in:
                     mOption = 0;
@@ -165,7 +151,6 @@ public class ActivityAccess extends BaseActivity {
             }
         }
     }
-
 
     private boolean validateAccount() {
         mAccount = null;
@@ -199,9 +184,8 @@ public class ActivityAccess extends BaseActivity {
         return false;
     }
 
-    private boolean validateRePsw(){
-
-        if(!validatePsw()){
+    private boolean validateRePsw() {
+        if (!validatePsw()) {
             return false;
         }
 
@@ -223,8 +207,7 @@ public class ActivityAccess extends BaseActivity {
         return true;
     }
 
-    private boolean validatePsw(){
-
+    private boolean validatePsw() {
         if (StringUtils.isNull(mEtPwd)) {
             showCustomToast("请输入密码");
             mEtPwd.requestFocus();
@@ -238,31 +221,63 @@ public class ActivityAccess extends BaseActivity {
             }
         }
 
-
         return true;
     }
 
-    public static interface SignUpCallBack{
-
-        public void postSignUpResult(int code);
-
-    }
-    public static interface SignInCallBack{
-
-        public void postSignInResult(int code);
-
+    public interface SignUpCallBack {
+        void postSignUpResult(int code);
     }
 
-    class CallBackProcessor implements SignInCallBack,SignUpCallBack{
+    public interface SignInCallBack {
+        void postSignInResult(int code);
+    }
 
+    class CallBackProcessor implements SignInCallBack, SignUpCallBack {
         @Override
         public void postSignInResult(int code) {
-
         }
 
         @Override
         public void postSignUpResult(int code) {
+        }
+    }
 
+    class AccessSparkListener extends SimpleSparkListener {
+        @Override
+        public void onConnect() {
+            if (mOption == 0) {
+                mApp.login(mAccount, pwd);
+                mSparkState = 2;
+            } else if (mOption == 1) {
+                mApp.register(mAccount, mAccount, pwd);
+                mSparkState = 3;
+            }
+        }
+
+        @Override
+        public void onLogin() {
+            mCommonLoadBar.stopLoad();
+            if (SharePreferenceUtil.getVCardUploaded(mAccount)) {
+                startActivity(ActivityRoom.class, null);
+            } else {
+                startActivity(ActivityUserInfo.class, null);
+            }
+            mSparkState = 0;
+        }
+
+        @Override
+        public void onRegister() {
+            SharePreferenceUtil.setId(mAccount);
+            mApp.login(mAccount, pwd);
+            mSparkState = 2;
+        }
+
+        @Override
+        public void onError(SparkError error, SparkAction action) {
+            showCustomToast(error.getError().toString());
+//            mApp.retry(action);
+            mCommonLoadBar.stopLoad();
+            mSparkState = 0;
         }
     }
 }

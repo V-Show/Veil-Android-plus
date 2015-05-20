@@ -24,8 +24,6 @@ public class ChatAdapter extends BaseObjectListAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
-
         View view = null;
         final IMMessage msg = (IMMessage) getItem(position);
 

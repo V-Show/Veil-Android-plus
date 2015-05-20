@@ -23,6 +23,8 @@ public class StepBaseInfo extends RegisterStep {
     private BaseDialog mBaseDialog;
     private boolean mIsChange = true;
     private boolean mIsGenderAlert;
+    private int mGender = 0; /** default gender is 0, please refer {@link com.veiljoy.veil.utils.SharePreferenceUtil#setGender} to get the meaning of gender value */
+
     public StepBaseInfo(ActivityUserInfo activity, View contentRootView) {
 
         super(activity, contentRootView);
@@ -45,7 +47,6 @@ public class StepBaseInfo extends RegisterStep {
 
     @Override
     public boolean validate() {
-
         if (isNull(mEtName)) {
             showCustomToast("请输入用户名");
             mEtName.requestFocus();
@@ -56,8 +57,8 @@ public class StepBaseInfo extends RegisterStep {
             return false;
         }
         SharePreferenceUtil.setName(mEtName.getText().toString().trim());
+        SharePreferenceUtil.setGender(mGender);
         return true;
-
     }
 
     @Override
@@ -70,12 +71,11 @@ public class StepBaseInfo extends RegisterStep {
         mOnNextActionListener.next();
     }
 
-    class  OnGenderCheckedListener implements RadioGroup.OnCheckedChangeListener {
+    class OnGenderCheckedListener implements RadioGroup.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             mIsChange = true;
-            int gender=0;
             if (!mIsGenderAlert) {
                 mIsGenderAlert = true;
                 mBaseDialog = BaseDialog.getDialog(mContext, "提示", "注册成功后性别将不可更改",
@@ -91,16 +91,14 @@ public class StepBaseInfo extends RegisterStep {
             switch (checkedId) {
                 case R.id.reg_baseinfo_rb_male:
                     mRbMale.setChecked(true);
-                    gender =0;
+                    mGender = 0;
                     break;
 
                 case R.id.reg_baseinfo_rb_female:
                     mRbFemale.setChecked(true);
-                    gender=1;
+                    mGender = 1;
                     break;
-
             }
-            SharePreferenceUtil.setGender(gender);
         }
     }
 }

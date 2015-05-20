@@ -2,6 +2,7 @@ package com.veiljoy.veil.android;
 
 import android.app.Application;
 
+import com.veiljoy.spark.android.core.SparkApplication;
 import com.veiljoy.veil.memory.ImageCache;
 import com.veiljoy.veil.utils.Constants;
 import com.veiljoy.veil.utils.SharePreferenceUtil;
@@ -10,7 +11,7 @@ import com.veiljoy.veil.xmpp.base.XmppConnectionManager;
 /**
  * Created by zhongqihong on 15/3/31.
  */
-public class BaseApplication extends Application {
+public class BaseApplication extends SparkApplication {
 
     @Override
     public void onCreate() {
@@ -20,20 +21,14 @@ public class BaseApplication extends Application {
         ImageCache.init(this);
     }
 
-    public void exit(){
+    public void exit() {
         XmppConnectionManager.getInstance().disconnect();
         SharePreferenceUtil.setStatus(Constants.LOGIN_ERROR);
         SharePreferenceUtil.setRoom("null");
         System.exit(0);
     }
 
-
-
-    public void enter(){
+    public void enter() {
         SharePreferenceUtil.setStatus(Constants.LOGIN_SUCCESS);
     }
-
-
-
-
 }
