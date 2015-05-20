@@ -17,11 +17,26 @@ public abstract class IMMessageImageBaseItem extends IMMessageItem {
     protected Bitmap mBitmap;
     protected ImageView mIvImage;
     protected int mVoiceResId;
+    View.OnLongClickListener mOnLongClickListener;
+    View.OnClickListener mOnClickListener;
 
     public IMMessageImageBaseItem(IMMessage msg, Context context) {
 
         super(msg, context);
 
+    }
+
+    protected  void setmOnLongClickListener(View.OnLongClickListener l){
+        this.mOnLongClickListener=l;
+        if(mOnLongClickListener!=null&&mIvImage!=null){
+            mIvImage.setOnLongClickListener(mOnLongClickListener);
+        }
+    }
+    protected  void setmOnClickListener(View.OnClickListener l){
+        this.mOnClickListener=l;
+        if(mOnClickListener!=null&&mIvImage!=null){
+            mIvImage.setOnClickListener(mOnClickListener);
+        }
     }
 
     public abstract void initImages();

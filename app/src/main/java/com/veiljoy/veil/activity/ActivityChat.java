@@ -508,7 +508,6 @@ public class ActivityChat extends ActivityChatSupport implements View.OnLongClic
 
         @Override
         public void onResult(String fileName) {
-            Log.v("chatActivity", "onResult " + fileName);
             if (fileName != null) {
                 mVoiceFileName = fileName;
 

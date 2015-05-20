@@ -59,6 +59,11 @@ public class IMMmessageImageItem extends IMMessageItem implements OnLongClickLis
     }
 
     @Override
+    public void  onStatusChanged(int status) {
+
+    }
+
+    @Override
     public void onClick(View v) {
 //    Intent intent = new Intent(mContext, ImageBrowserActivity.class);
 //    intent.putExtra(ImageBrowserActivity.IMAGE_TYPE,

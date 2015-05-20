@@ -45,7 +45,7 @@ import java.util.Map;
 public abstract class ActivityChatSupport extends BaseActivity {
 
     final String TAG = this.getClass().getName();
-
+    protected boolean DEBUG=true;
     MultiUserChat mMultiUserChat;
     private static int pageSize = 10;
     protected String to;
@@ -137,7 +137,7 @@ public abstract class ActivityChatSupport extends BaseActivity {
         message.setBody(newMessage.getmContent());
         newMessage.setmMessageType(IMMessage.SEND);
 
-        if(mMultiUserChat!=null){
+        if(DEBUG==false){
             try {
                 Log.v("ChatActivity", "start  sending....");
                 mMultiUserChat.sendMessage(content);
@@ -154,10 +154,13 @@ public abstract class ActivityChatSupport extends BaseActivity {
 
 
 
+
+
         newMessage.setmTime(time);
         messagePool.add(newMessage);
-        //MessageManager.getInstance(this).saveIMMessage(newMessage);
-        // MChatManager.message_pool.add(newMessage);
+
+
+
 
         // 刷新视图
         refreshMessage(messagePool);

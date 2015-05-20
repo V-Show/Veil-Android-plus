@@ -30,6 +30,7 @@ public class VoiceUtils {
     public static String mDefFileName;
     public static VoiceUtils mInstance = null;
     private OnVoiceRecordListener mOnVoiceRecordListener;
+    private OnVoicePlayListener mOnVoicePlayListener;
     private AudioRecord audioRecord;
     public static final String suffix=".pcm";
     private VoiceUtils() {
@@ -247,6 +248,10 @@ public class VoiceUtils {
         this.mOnVoiceRecordListener = l;
     }
 
+    public void setOnVoicePlayListener(OnVoicePlayListener l){
+        this.mOnVoicePlayListener=l;
+    }
+
     public static interface OnVoiceRecordListener {
 
         public void onBackgroundRunning();
@@ -255,6 +260,13 @@ public class VoiceUtils {
         public void onResult(String fileName);
 
         public void onPreRecord();
+
+
+    }
+
+    public static interface OnVoicePlayListener {
+
+        public void onPlayStop();
 
 
     }

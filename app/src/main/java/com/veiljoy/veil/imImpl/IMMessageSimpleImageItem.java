@@ -18,7 +18,12 @@ public class IMMessageSimpleImageItem extends IMMessageImageBaseItem {
     }
 
     @Override
+    public void  onStatusChanged(int status) {
+
+    }
+
+    @Override
     public void initImages() {
-        mVoiceResId = R.mipmap.person0_voice_0;
+        mVoiceResId = R.mipmap.ic_voice_img_1;
     }
 }

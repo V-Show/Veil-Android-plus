@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -26,6 +27,7 @@ import com.veiljoy.veil.android.BaseApplication;
 import com.veiljoy.veil.bean.UserInfo;
 import com.veiljoy.veil.im.IMMessage;
 import com.veiljoy.veil.im.IMMessageVoiceEntity;
+import com.veiljoy.veil.imImpl.IMMessageItem;
 import com.veiljoy.veil.utils.CommonUtils;
 import com.veiljoy.veil.utils.VoiceUtils;
 
@@ -43,7 +45,7 @@ import java.util.Set;
 public class ActivityRoom extends ActivityChatSupport implements  View.OnLongClickListener,View.OnClickListener {
 
 
-    boolean DEBUG=true;
+
 
     final String TAG = "ActivityRoom";
     ListView mLVChat;
@@ -75,6 +77,13 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
     private ImageButton mBack;
     BaseApplication application;
 
+    /*当前正在播放的语言*/
+    int mCurrPlayItem=0;
+    /**
+     * 最后显示时间的时间，超过5分钟显示一次时间
+     * **/
+
+
     /*
  *监控录音时间
  */
@@ -97,6 +106,12 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
 
     }
 
+    private void clearMessage(){
+        messagePool.clear();
+        mChatAdapter.refreshList(messagePool);
+        //mLVChat.setSelection(messagePool.size());
+    }
+
     @Override
     protected void receiveNewMessage(IMMessage message) {
 
@@ -117,17 +132,39 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
                 o = new IMMessageVoiceEntity();
                 o.setmUri(IMMessage.Scheme.VOICE.wrap(""));
                 Random r = new Random(System.currentTimeMillis());
-                o.setmMessageType(Math.abs(r.nextInt() % 2));
                 o.setmAvatar(avatarPath);
-                ((IMMessageVoiceEntity) o).setmVoiceTimeRange(Math.abs(r.nextInt() % 20));
+                ((IMMessageVoiceEntity) o).setmVoiceTimeRange((int)((afterTime - beforeTime) / 1000));
                 ((IMMessageVoiceEntity) o).setmVoiceFileName(mVoiceFileName);
-
+                o.setmRead(1);
                 break;
         }
 
         return o;
     }
+    /*
+        * 播放指定的语音项
+        *
+        * */
+    class OnChatListItemClick implements ListView.OnItemClickListener {
 
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+            mCurrPlayItem= position;
+            IMMessage msg = (IMMessage) getMessages().get(position);
+            String uri = msg.getmUri();
+            switch (IMMessage.Scheme.ofUri(uri)) {
+                case VOICE:
+                    IMMessageVoiceEntity voiceEntity = (IMMessageVoiceEntity) msg;
+                    Log.v("chatActivity", "OnChatListItemClick " + voiceEntity.getmVoiceFileName());
+                    VoiceUtils.getmInstance().play(voiceEntity.getmVoiceFileName());
+                    break;
+                case IMAGE:
+                    break;
+            }
+        }
+    }
     @Override
     protected void updateUserInfo(Map<String, UserInfo> userInfoList) {
 
@@ -243,11 +280,13 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
         mBtnTalk.setOnLongClickListener(this);
         mBtnTalk.setOnTouchListener(new OnTalkBtnTouch());
         mDetailLayout.setOnClickListener(this);
+      //  mLVChat.setOnItemClickListener(new OnChatListItemClick());
     }
 
     private void init() {
         application = (BaseApplication) getApplication();
         VoiceUtils.getmInstance().setOnVoiceRecordListener(new OnVoiceRecordListenerImpl());
+        VoiceUtils.getmInstance().setOnVoicePlayListener(new OnVoicePlayListenerImpl());
 //        if (previewScroll.getScrollY() != 0) {
 //            previewScroll.smoothScrollTo(0, 0);
 //        }
@@ -255,48 +294,48 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
 //        reLayoutScroll();
     }
 
-    private void reLayoutScroll() {
-
-
-        previewScroll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            View viewGap;
-
-            @Override
-            public void onGlobalLayout() {
-                viewGap = findViewById(R.id.chat_bottom_bar_user_layout);
-                final int pictureHeight = viewGap.getLayoutParams().height;
-                Log.d("PreviewHotActivity", "reLayoutScroll,pictureH=" + pictureHeight
-                        + ",scrollH=" + previewScroll.getHeight());
-                viewGap.getLayoutParams().height = previewScroll.getHeight();
-
-                if (pictureHeight == previewScroll.getHeight()) {
-                    drawScroll = true;
-                    previewScroll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                } else {
-                    drawScroll = false;
-                }
-            }
-        });
-        previewScroll.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-
-            @Override
-            public boolean onPreDraw() {
-                if (drawScroll) {
-                    previewScroll.getViewTreeObserver().removeOnPreDrawListener(this);
-                }
-                return drawScroll;
-            }
-        });
-    }
-
-    private void smoothScrollMore() {
-        if (previewScroll.getScrollY() != 0) {
-            previewScroll.smoothScrollTo(0, 0);
-        } else {
-            previewScroll.smoothScrollTo(0, previewScroll.getMaxScrollAmount());
-        }
-    }
+//    private void reLayoutScroll() {
+//
+//
+//        previewScroll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//
+//            View viewGap;
+//
+//            @Override
+//            public void onGlobalLayout() {
+//                viewGap = findViewById(R.id.chat_bottom_bar_user_layout);
+//                final int pictureHeight = viewGap.getLayoutParams().height;
+//                Log.d("PreviewHotActivity", "reLayoutScroll,pictureH=" + pictureHeight
+//                        + ",scrollH=" + previewScroll.getHeight());
+//                viewGap.getLayoutParams().height = previewScroll.getHeight();
+//
+//                if (pictureHeight == previewScroll.getHeight()) {
+//                    drawScroll = true;
+//                    previewScroll.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                } else {
+//                    drawScroll = false;
+//                }
+//            }
+//        });
+//        previewScroll.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//
+//            @Override
+//            public boolean onPreDraw() {
+//                if (drawScroll) {
+//                    previewScroll.getViewTreeObserver().removeOnPreDrawListener(this);
+//                }
+//                return drawScroll;
+//            }
+//        });
+//    }
+//
+//    private void smoothScrollMore() {
+//        if (previewScroll.getScrollY() != 0) {
+//            previewScroll.smoothScrollTo(0, 0);
+//        } else {
+//            previewScroll.smoothScrollTo(0, previewScroll.getMaxScrollAmount());
+//        }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -327,8 +366,10 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
             case R.id.activity_room_member0_layout:
             case R.id.activity_room_member1_layout:
             case R.id.activity_room_member2_layout:
-                setMemberFocus(v.getId());
 
+
+                setMemberFocus(v.getId());
+               // clearMessage();
                 if(mCurrFocusMember==v.getId()){
                     if(mIsVoiceBtnShow){
                         mVoiceLayout.setVisibility(View.GONE);
@@ -379,7 +420,8 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
                     currMsgType = IMMessage.Scheme.VOICE.wrap("test");
                     mVoiceFileName = VoiceUtils.generateFileName();
 
-                    VoiceUtils.getmInstance().startRecord(mVoiceFileName);
+                    if(!DEBUG)
+                         VoiceUtils.getmInstance().startRecord(mVoiceFileName);
                 }
 
 
@@ -411,9 +453,14 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP: {
-                        recordStop();
+
                         if(DEBUG) {
+                            afterTime = System.currentTimeMillis();
+                            isTalking = false;
                             new OnVoiceRecordListenerImpl().onResult("");
+                        }
+                        else {
+                            recordStop();
                         }
                     }
                     break;
@@ -423,6 +470,15 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
             return false;
         }
     }
+
+    class OnVoicePlayListenerImpl implements VoiceUtils.OnVoicePlayListener {
+
+        @Override
+        public void onPlayStop() {
+
+        }
+    }
+
 
     /*
    * 发送语音消息
@@ -464,7 +520,7 @@ public class ActivityRoom extends ActivityChatSupport implements  View.OnLongCli
         }
         @Override
         public void onPreRecord() {
-            Log.v("chatActivity", "onPreRecord ");
+
 
         }
     }
